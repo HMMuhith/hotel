@@ -54,6 +54,13 @@ app.use('/room',roomRoute)
 
 app.post('/upload',express.static(path.join(__dirname,'public')))
 
+if(process.env.NODE_ENV==='production'){
+  app.use('*',(req,res)=>{
+    res.sendFile(path.resolve(__dirname,'hotel','dist','index.html'))
+  })
+
+  app.use(express.static(path.join(__dirname,'dist')))
+}
 app.listen(process.env.PORT,()=>{
    console.log(`server running at ${process.env.PORT}`)
    
