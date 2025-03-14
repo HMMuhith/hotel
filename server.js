@@ -1,7 +1,7 @@
 import express from 'express'
 import mongoose from 'mongoose'
 import dotenv from 'dotenv'
-import path from 'path'
+import path, { dirname } from 'path'
 import hotelRoute from './hotel.js'
 import roomRoute from './room.js'
 import userRoute from './user.js'
@@ -52,16 +52,16 @@ app.use('/user',userRoute)
 
 app.use('/room',roomRoute)
 
-app.post('/upload',express.static(path.join(__dirname,'public')))
+// app.post('/upload',express.static(path.join(__dirname,'public')))
 
 if(process.env.NODE_ENV==='production'){
   app.use('*',(req,res)=>{
     res.sendFile(path.resolve(__dirname,'hotel','dist','index.html'))
   })
 
-  app.use(express.static(path.join(__dirname,'dist')))
+  app.use(express.static(path.join(__dirname,'hotel','dist')))
 }
-app.listen(process.env.PORT,()=>{
+app.listen(process.env.PORT || 5000,()=>{
    console.log(`server running at ${process.env.PORT}`)
    
 })
