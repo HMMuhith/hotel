@@ -9,7 +9,7 @@
     "start": "node server.js",
     "server": "nodemon server.js",
     "Dev": "concurrently \" npm run server \" \"cd hotel && npm run dev\" ",
-    "build":"npm install && npm install --prefix hotel && npm run build --prefix hotel"
+    "build":"npm install --legacy-peer-deps && npm install --prefix hotel && npm run build --prefix hotel"
   },
   "keywords": [
     "booking"
