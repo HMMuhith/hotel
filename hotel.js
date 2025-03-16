@@ -31,13 +31,14 @@ router.post('/', upload.array('photos'), async (req, res) => {
     try {
         const hotel = new Hotel(
             {   
-                user:req.user.id,
+                // user:req.user.id,
                 photos: req?.files?.map(file => file.path),
                 name: req.body.name,
                 type: req.body.type,
                 city: req.body.city,
                 country: req.body.country,
-                description: req.body.description,
+                description: req.body.desc,
+                facilities: req.body.facilities,
                 starRating: req.body.starRating,
                 childCount: req.body.childCount,
                 adultCount:req.body.adultCount,
