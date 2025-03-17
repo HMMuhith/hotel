@@ -16,6 +16,6 @@ export default defineConfig({
   resolve:{
     extensions:['.mjs', '.js', '.mts', '.ts', '.jsx', '.tsx', '.json']
   },
-  assetsInclude: ['**/*.JPG',"**/*.PNG"],
+  assetsInclude: ['**/*.JPG',"**/*.PNG",'**/*.svg'],
 
 })

@@ -7,6 +7,7 @@ import roomRoute from './room.js'
 import userRoute from './user.js'
 import session from 'express-session'
 import ConnectMongoDBSession from 'connect-mongodb-session'
+import Hotel from './HotelModel.js'
 
 dotenv.config() 
 const MONGO_URI=`mongodb+srv://${process.env.MONGODB_USER}:${process.env.MONGODB_PASSWORD}@cluster0.k4lgw6j.mongodb.net/${process.env.MONGODB_DB_NAME}`; 

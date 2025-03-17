@@ -6,6 +6,8 @@ import LogIn from "./login";
 import Header from "./header";
 import Footer from "./footer";
 import Hotelform from "./hotelform";
+import MyHotel from "./myhotel";
+import EditHotel from "./edithotel";
 
 function Routes() {
     const router = createBrowserRouter([
@@ -24,6 +26,14 @@ function Routes() {
         {
             path:'/addhotel',
             element:<><Hotelform/></>
+        },
+        {
+            path:'/myhotel',
+            element:<><Header/><MyHotel/><Footer/></>
+        },
+        {
+            path:'/edithotel/:hotelid',
+            element:<><Header/><EditHotel/><Footer/></>
         }
     ])
     return (

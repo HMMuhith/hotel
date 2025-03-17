@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { facilities } from './hoteltypes'
 import { hotelTypes } from './hoteltypes'
 import axios from 'axios'
@@ -45,9 +45,11 @@ function Hotelform() {
             formdata.append('facilities', item)
         })
 
-        const request = await axios.post(`http://127.0.0.1:7000/booking`, formdata,{ withCredentials:true })
-        const data = await request.data
-        console.log(data)
+    const request = await axios.post(`http://127.0.0.1:7000/booking`, formdata,{ withCredentials:true })
+    const data = await request.data
+    console.log(data)
+
+        
     }
     return (
         <>
@@ -103,15 +105,15 @@ function Hotelform() {
                 <div >
                     <h1>Facilities</h1>
                     <div className='w-svw border border-zinc-300 flex justify-around items-center h-24'>
-                        {facilities.map(item => {
+                        {facilities.map((item,index) => {
                             return <>
 
-                                <label>
-                                    <input type="checkbox" id='facilities' ref={checkref} name='facilities' className='text-black font-bold text-xl' onChange={e => {
+                               
+                                    <input type="checkbox" id={`${index}`} ref={checkref} name='facilities' className='text-black font-bold text-xl' onChange={e => {
                                         return e.target.checked === true ? setfacility([...facility, e.target.value]) : ''
                                     }} value={item} />
                                     <span>{item}</span>
-                                </label>
+                              
                                 <span>{error ? error : ''}</span>
 
                             </>
