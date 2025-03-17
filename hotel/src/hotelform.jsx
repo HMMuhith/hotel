@@ -35,6 +35,7 @@ function Hotelform() {
         formdata.append('adultCount', adultCount)
         formdata.append('pricePerNight', pricePerNight)
         formdata.append('type', type)
+        formdata.append('starRating',starRating)
         for (let i = 0; i < photos.length; i++) {
             formdata.append('photos', photos[i])
         }
@@ -78,10 +79,10 @@ function Hotelform() {
                 <label htmlFor="starRating">
                     Rating <select name="starRating" id="starRating" value={starRating} onChange={e => setstarRating(e.target.value)} >
                         <option value="">Select rating</option>
-                        {[...Array(1, 2, 3, 4, 5)].map(num => {
+                        {[...Array(1, 2, 3, 4, 5)].map((num,index) => {
                             return (
 
-                                <option value="num">{num}</option>
+                                <option key={index+1} value={num}>{num}</option>
                             )
                         })
                         }

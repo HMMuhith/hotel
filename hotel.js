@@ -37,7 +37,7 @@ router.post('/', upload.array('photos'), async (req, res) => {
                 type: req.body.type,
                 city: req.body.city,
                 country: req.body.country,
-                description: req.body.desc,
+                description: req.body.description,
                 facilities: req.body.facilities,
                 starRating: req.body.starRating,
                 childCount: req.body.childCount,
@@ -63,9 +63,9 @@ router.get('/', Auth, async (req, res) => {
     }
 })
 
-router.get('/find/:id', async (req, res) => {
+router.get('/find/:hotelid', async (req, res) => {
     try {
-        const getHotel = await Hotel.findById(req.params.id)
+        const getHotel = await Hotel.findById(req.params.hotelid)
         res.status(200).json(getHotel)
     }
     catch (err) {
@@ -85,26 +85,28 @@ router.get('/query', async (req, res) => {
     }
 })
 
-router.put('/:id', async (req, res) => {
+router.put('/:hotelid', upload.array('photos'), async (req, res) => {
     try {
-        const updatedItems = await Hotel.findByIdAndUpdate(req.params.id, {
+        const updatedItems = await Hotel.findByIdAndUpdate(req.params.hotelid, {
             $set: {
                 name: req.body.name,
                 type: req.body.type,
+                country:req.body.country,
                 city: req.body.city,
                 address: req.body.address,
-                desc: req.body.desc,
-                photos: req?.file?.photos,
-                rating: req.body.rating,
-                rooms: req.body.rooms,
-                cheapestPrice: req.body.cheapestPrice
+                description: req.body.description,
+                photos:req?.files?.map(file => file.path),
+                starRating: req.body.starRating,
+                childCount: req.body.childCount,
+                adultCount:req.body.adultCount,
+                pricePerNight: req.body.pricePerNight
             }
         }, { new: true })
 
         res.status(200).json(updatedItems)
     }
-    catch {
-        res.status(400).json({ error: `something went wrong` })
+    catch (err){
+        res.status(400).json({ error: `${err}` })
     }
 })
 
