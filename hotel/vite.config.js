@@ -9,18 +9,14 @@ export default defineConfig({
   plugins: [
     react(),
     tailwindcss(),
-    svgr({
-      
-      include:'**/*.svg',
-    })
   ],
-  build:{
-outDir:path.join(__dirname,'dist'),
-emptyOutDir:true
-  },
-  resolve:{
-    extensions:['.mjs', '.js', '.mts', '.ts', '.jsx', '.tsx', '.json']
-  },
+//   build:{
+// outDir:path.join(__dirname,'dist'),
+// emptyOutDir:true
+//   },
+//   resolve:{
+//     extensions:['.mjs', '.js', '.mts', '.ts', '.jsx', '.tsx', '.json']
+//   },
   assetsInclude: ['**/*.JPG',"**/*.PNG",'**/*.svg'],
 
 })

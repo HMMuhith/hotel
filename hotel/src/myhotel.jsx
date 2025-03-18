@@ -9,8 +9,8 @@ function MyHotel() {
 
     useEffect(() => {
         const request = async () => {
-            const response = await axios.get(`${import.meta.env}/booking`)
-            const data = response.data
+            const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/booking`)
+            const data = await response.data
             console.log(data)
             setdata(data)
         }
@@ -29,8 +29,8 @@ function MyHotel() {
                     Add Hotel
                 </Link>
             </span>
-            <div className="grid grid-cols-1 gap-8">
-                {Data.map((hotel) => (
+             <div className="grid grid-cols-1 gap-8">
+                { Data?.map((hotel) => (
                     <div
                         data-testid="hotel-card"
                         className="flex flex-col justify-between border border-slate-300 rounded-lg p-8 gap-5"
@@ -68,7 +68,7 @@ function MyHotel() {
                         </span>
                     </div>
                 ))}
-            </div>
+            </div> 
         </div>
     )
 }

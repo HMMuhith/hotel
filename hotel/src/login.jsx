@@ -91,7 +91,7 @@ dispatch(LoginUser(data.user))
 console.log(data)
 setstatus({type:'success'})
 // toast.success(`You signed in successfully`)
-testify()
+// testify()
 
   
 }

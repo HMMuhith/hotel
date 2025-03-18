@@ -28,7 +28,7 @@ function EditHotel() {
   
   useEffect(() => {
     const request = async () => {
-      const response = await axios.get(`${import.meta.env}/booking/find/${hotelid}`)
+      const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/booking/find/${hotelid}`)
       const data =await  response.data
     
       

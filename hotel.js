@@ -53,7 +53,7 @@ router.post('/', upload.array('photos'), async (req, res) => {
     }
 })
 
-router.get('/', Auth, async (req, res) => {
+router.get('/',  async (req, res) => {
     try {
         const getHotel = await Hotel.find({})
         res.status(200).json(getHotel)
