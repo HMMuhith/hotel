@@ -9,7 +9,7 @@ function MyHotel() {
 
     useEffect(() => {
         const request = async () => {
-            const response = await axios.get(`http://127.0.0.1:7000/booking`)
+            const response = await axios.get(`${import.meta.env}/booking`)
             const data = response.data
             console.log(data)
             setdata(data)

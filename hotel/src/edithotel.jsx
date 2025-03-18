@@ -28,7 +28,7 @@ function EditHotel() {
   
   useEffect(() => {
     const request = async () => {
-      const response = await axios.get(`http://127.0.0.1:7000/booking/find/${hotelid}`)
+      const response = await axios.get(`${import.meta.env}/booking/find/${hotelid}`)
       const data =await  response.data
     
       

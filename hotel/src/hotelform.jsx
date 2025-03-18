@@ -46,7 +46,7 @@ function Hotelform() {
             formdata.append('facilities', item)
         })
 
-    const request = await axios.post(`http://127.0.0.1:7000/booking`, formdata,{ withCredentials:true })
+    const request = await axios.post(`${import.meta.env}/booking`, formdata,{ withCredentials:true })
     const data = await request.data
     console.log(data)
 
