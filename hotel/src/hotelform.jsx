@@ -30,7 +30,7 @@ function Hotelform() {
         formdata.append('name', name)
         formdata.append('city', city)
         formdata.append('country', country)
-        formdata.append('desc', description)
+        formdata.append('description', description)
         formdata.append('childCount', childCount)
         formdata.append('adultCount', adultCount)
         formdata.append('pricePerNight', pricePerNight)
@@ -71,7 +71,7 @@ function Hotelform() {
                 <label htmlFor="description" name='description'>
                     Description
 
-                    <textarea className='resize-none' value={description} onChange={e => setDecription(e.target.value)} name="desc" id="description" rows={10}></textarea>
+                    <textarea className='resize-none' value={description} onChange={e => setDecription(e.target.value)} name="description" id="description" rows={10}></textarea>
                 </label>
                 <label htmlFor="price">
                     Price per night <input type="number" min={1} name="pricePerNight" value={pricePerNight} onChange={e => setPricepernight(e.target.value)} id="price" />

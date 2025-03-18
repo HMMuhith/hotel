@@ -99,7 +99,8 @@ router.put('/:hotelid', upload.array('photos'), async (req, res) => {
                 starRating: req.body.starRating,
                 childCount: req.body.childCount,
                 adultCount:req.body.adultCount,
-                pricePerNight: req.body.pricePerNight
+                pricePerNight: req.body.pricePerNight,
+                facilities:req.body.facilities
             }
         }, { new: true })
 
