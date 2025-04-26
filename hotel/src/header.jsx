@@ -3,10 +3,13 @@ import { useDispatch, useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
 import { LogOut } from './authSlice'
 import axios from 'axios'
+import SearchBar from './searchbar'
 
 function Header() {
-    const {user}=useSelector(state=>state.auth)
+ 
     const dispatch=useDispatch()
+    const {user}=useSelector(store=>store.auth)
+    
    async function logoutHandler(){
 const data=await axios.post(`${import.meta.env.VITE_BACKEND_URL}/user/logout`,{
     withCredentials:true
@@ -15,7 +18,8 @@ const data=await axios.post(`${import.meta.env.VITE_BACKEND_URL}/user/logout`,{
 console.log(data)
         dispatch(LogOut())
    }
-    return (
+    return ( 
+        <>
         <div className='bg-header text-white flex flex-col w-svw'>
             <div className='flex justify-between mx-auto w-svw '>
                 <span className='py-4 pl-14 tracking-tight text-3xl font-bold tracking-light'>
@@ -32,6 +36,8 @@ console.log(data)
                </div> 
             </div>
         </div>
+        <SearchBar/>
+        </>
     )
 }
 

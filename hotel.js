@@ -5,6 +5,8 @@ import { CloudinaryStorage } from 'multer-storage-cloudinary'
 import { v2 as cloudinary } from 'cloudinary'
 import multer from 'multer'
 import dotenv from 'dotenv'
+import Stripe from 'stripe'
+
 
 dotenv.config()
 cloudinary.config({
@@ -22,16 +24,16 @@ const storage = new CloudinaryStorage({
 
 
 })
-
+  
 const upload = multer({ storage })
 const router = express.Router()
 
-router.post('/', upload.array('photos'), async (req, res) => {
+router.post('/', Auth, upload.array('photos'), async (req, res) => {
 
     try {
         const hotel = new Hotel(
             {   
-                // user:req.user.id,
+                userId:req.user.id,
                 photos: req?.files?.map(file => file.path),
                 name: req.body.name,
                 type: req.body.type,
@@ -53,9 +55,93 @@ router.post('/', upload.array('photos'), async (req, res) => {
     }
 })
 
+
+const stripe=new Stripe(process.env.STRIPE_API_KEY)
+
+router.post('/:hotelid/payment',Auth, async(req,res)=>{
+
+    try{
+    const NumberofNights=req.body.NumberofNights
+    const userId=req.user.id
+    const hotelid=req.params.hotelid
+    const hotel =await Hotel.findById(hotelid)
+    const totalCost=hotel.pricePerNight*NumberofNights
+
+    const payment= await stripe.paymentIntents.create({
+        currency:'USD',
+amount:totalCost*100,
+metadata:{
+    hotelid, 
+    userId 
+}
+    }) 
+if(!payment.client_secret){
+   return res.status(500).json({error:`Creating payment failed`})
+}
+
+
+const response={
+    paymentID:payment.id,
+    clientSecret:payment.client_secret.toString(),
+    totalCost
+}
+
+res.status(200).json(response)
+}
+catch(error){
+    console.log(error)
+    res.status(400).json({error:`${error} seen here`})
+} 
+}
+)
+
+router.post('/:hotelid/booking',Auth, async(req,res)=>{
+    try {
+       const paymentID=req.body.paymentID
+const payment=await stripe.paymentIntents.retrieve(paymentID)
+if(!payment){
+   return res.status(400).json({message:'payment intent not found'})
+}
+
+if(payment.metadata.hotelid !== req.params.hotelid){
+return res.status(400).json({message:`payment intent mismatch`})
+}
+
+// if(payment.status!=='succeeded'){
+//     return res.status(400).json({message:`Payment not succeeded`, status:`${payment.status}`})
+// }
+
+// const booking={
+//     name:req.body.name,
+// email: req.body.email,
+// adultCount:req.body.adultCount,
+// childcount :req.body.childCount,
+// checkIn:req.body.checkIn,
+// checkOut:req.body.checkOut,
+// totalCost: req.body.totalCost,
+// paymentID:payment.id
+
+// }
+const booking={...req.body,userId:req.user.id}
+
+const updateBooking= await Hotel.findByIdAndUpdate(req.params.hotelid,{
+    $push:{bookings:booking}
+},{new:true})
+if(!updateBooking){
+    return res.status(400).json({message:`Hotel not found`})
+}
+await updateBooking.save()
+res.status(200).json({Bookingupdated:updateBooking})
+
+
+    } catch (error) {
+        res.status(500).json({message:`${error} found`})
+    }
+})
+
 router.get('/',  async (req, res) => {
     try {
-        const getHotel = await Hotel.find({})
+        const getHotel = await Hotel.find({}).sort('-lastUpdated')
         res.status(200).json(getHotel)
     }
     catch (err) {
@@ -63,7 +149,7 @@ router.get('/',  async (req, res) => {
     }
 })
 
-router.get('/find/:hotelid', async (req, res) => {
+router.get('/find/:hotelid',async (req, res) => {
     try {
         const getHotel = await Hotel.findById(req.params.hotelid)
         res.status(200).json(getHotel)
@@ -72,30 +158,74 @@ router.get('/find/:hotelid', async (req, res) => {
         res.status(400).json({ Error: `${err}` })
     }
 })
-router.get('/query', async (req, res) => {
-    const cityquery = req.query.city.split(",")
+
+router.get('/publish', Auth,async(req,res)=>{
     try {
-        const list = await Promise.all(cityquery.map(city => {
-            return Hotel.countDocuments({ city })
-        }))
-        res.status(200).json(list)
+        res.send({
+            publish_key:process.env.STRIPE_PUBLISH_KEY
+        })
     } catch (error) {
-        console.log(error)
-        res.status(404).json(error)
+        res.status(400).json({error})
     }
 })
+ 
 
-router.put('/:hotelid', upload.array('photos'), async (req, res) => {
+
+router.get('/search',async(req,res)=>{
+const pageNumber=parseInt(req.query.page? req.query.page.toString() : 1)
+const hotels_perpage=5
+const skippages=(pageNumber-1) * hotels_perpage
+const destination=req.query.destination?{$or:[{city: new RegExp(req.query.destination, 'i')},{country: new RegExp(req.query.destination,'i')}]}:''
+  
+  const  adultCount=req.query.adultCount?{adultCount:{$gte:parseInt(req.query.adultCount)}}:''
+  const  childCount=req.query.childCount?{childCount:{$gte:parseInt(req.query.childCount)}}:''
+   const facilities=req.query.facilities? {facilities:{$all:Array.isArray(req.query.facilities)?req.query.facilities :[req.query.facilities]}} :''
+   const type=req.query.type? {type:{$in:Array.isArray(req.query.type)?req.query.type:[req.query.type]}} : ''
+// const type=req.query.type?{type:{$exists:true}}:''
+const pricePerNight=req.query.pricePerNight?{pricePerNight:{$lte:parseInt(req.query.pricePerNight).toString()}}:''
+const starRating=req.query.starRating?{starRating:Array.isArray(req.query.starRating)?req.query.starRating.map(star=>parseInt(star)):parseInt(req.query.starRating).toString()} : ''
+
+
+let sorting={}
+try{
+switch(req.query.sort){
+    case 'starRating top':
+        sorting={starRating:-1}
+        break;
+    case 'price low to high':
+        sorting={pricePerNight:1} 
+        break;
+    case 'price high to low':
+        sorting={pricePerNight:-1}
+        break;
+}
+// const query={$or:[{city:'Rangpur', country:'Bangladesh'}]}
+const query={...destination,...childCount,...pricePerNight,...adultCount,...facilities,...type,...starRating}
+
+
+const hotels= await Hotel.find(query).sort(sorting).skip(skippages).limit(hotels_perpage)
+const totalHotels=await Hotel.countDocuments(query)
+const highestpage=Math.ceil(totalHotels/hotels_perpage)
+res.status(200).json({hotels,pageNumber,highestpage,totalHotels,})
+}
+catch(error){
+    res.status(400).json(error)
+}
+})
+
+
+router.put('/:hotelid', Auth, upload.array('photos'), async (req, res) => {
     try {
         const updatedItems = await Hotel.findByIdAndUpdate(req.params.hotelid, {
             $set: {
+                userId:req.user.id,
                 name: req.body.name,
                 type: req.body.type,
                 country:req.body.country,
                 city: req.body.city,
                 address: req.body.address,
                 description: req.body.description,
-                photos:req?.files?.map(file => file.path),
+                photos:req?.files?.map(file => [...file.path || null]),
                 starRating: req.body.starRating,
                 childCount: req.body.childCount,
                 adultCount:req.body.adultCount,
@@ -112,38 +242,9 @@ router.put('/:hotelid', upload.array('photos'), async (req, res) => {
 })
 
 
-router.get('/type', async(req,res)=>{
- try{
- const hotellist= await Hotel.countDocuments({type:'hotel'})
- const apartmentlist= await Hotel.countDocuments({type:'apartment'})
- const villalist= await Hotel.countDocuments({type:'villa'})
- const resortlist= await Hotel.countDocuments({type:'resort'})
- const cabinlist= await Hotel.countDocuments({type:'cabin'})
 
- res.status(200).json([
-    {type:'hotel', count:hotellist},
-{type:'apartment', count:apartmentlist},
-{type:'villa', count:villalist},
-{type:'resort', count:resortlist},
-{type:'cabin', count:cabinlist}
- ])
-}
-catch (error){
-res.status(400).json(error)
-}
-})
 
-router.get('/check', async(req,res)=>{
-    try {
-        // const checkfeature= await Hotel.find(req.query).limit(2)
-        const {min,max,...others}=req.query
-        const checkfeature= await Hotel.find({...others,cheapestPrice:{$gt:min ||20, $lt:max ||500}})
-        res.status(200).json(checkfeature)
-    } catch (error) {
-        console.log(error)
-        res.status(400).json(error)
-    }
-})
+
 
 router.delete('/:id', async (req, res) => {
     try {

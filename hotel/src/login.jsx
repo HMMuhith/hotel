@@ -82,12 +82,10 @@ const submit = async (e) => {
     password: user.password
   }
   try {
-  const response = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/user/login`,newUser,{
-    withCredentials:true
-  })
+  const response = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/user/login`,newUser)
 
 const data=response.data
-dispatch(LoginUser(data.user))
+dispatch(LoginUser(data))
 console.log(data)
 setstatus({type:'success'})
 // toast.success(`You signed in successfully`)

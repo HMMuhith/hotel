@@ -8,12 +8,16 @@ import Footer from "./footer";
 import Hotelform from "./hotelform";
 import MyHotel from "./myhotel";
 import EditHotel from "./edithotel";
+import Search from "./search";
+import Details from "./details";
+import Booking from "./booking";
+import { MyBooking } from "./mybooking";
 
 function Routes() {
     const router = createBrowserRouter([
         {
             path: '/',
-            element: <Home />
+            element:<><Header/><Home /><Footer/></> 
         },
         {
            path:'/register' ,
@@ -25,7 +29,7 @@ function Routes() {
         },
         {
             path:'/addhotel',
-            element:<><Hotelform/></>
+            element:<><Header/><Hotelform/><Footer/></>
         },
         {
             path:'/myhotel',
@@ -34,9 +38,30 @@ function Routes() {
         {
             path:'/edithotel/:hotelid',
             element:<><Header/><EditHotel/><Footer/></>
+        },
+        {
+            path:'/search',
+            element:<><Header/><Search/><Footer/></>
+        },
+        {
+            path:'/details/:hotelid',
+            element:<><Header/><Details/><Footer/></>
+        },
+        {
+            path:'/booking/:hotelid',
+            element:<><Header/><Booking/><Footer/></>
+        },
+        {
+            path:'/mybooking',
+            element:<><Header/><MyBooking/><Footer/></>
+        },
+        {
+            path:'/search?page/:pageNumber',
+            element:<><Header/><Search/><Footer/></>
         }
+       
     ])
-    return (
+    return ( 
         <>
         <RouterProvider router={router} />
         </>

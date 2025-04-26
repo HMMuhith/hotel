@@ -64,8 +64,9 @@ router.post('/signup', async (req, res) => {
         return bcrypt.hash(password, 10, async (err, hash) => {
             if (err) throw new err
             user.password = hash
+            
             const result = await user.save()
-            res.status(200).json({ user: result })
+            res.status(200).json(result)
         })
 
     }
@@ -93,22 +94,31 @@ router.post('/login', async (req, res) => {
         req.session.user = user
         req.session.user.id = user._id
         req.session.user.name = user.name
+        req.session.user.email=user.email
         req.session.save()
-        console.log()
 
-        return res.status(200).json({ success: `Loggedin successfully`, user: req.session.user.id, name: req.session.user.name })
+        return res.status(200).json({ success: `Loggedin successfully`, id: req.session.user.id, name: req.session.user.name,email:req.session.user.email })
     }
 
     return res.status(404).json({ error: `unauthorized user` })
 
 }
 )
-router.post('/logout', (req, res) => {
+router.post('/logout', (req, res,next) => {
     try
     {
-        req.session.destroy()
-        res.status(200).json({ success: `cookies deleted` })
-    }
+        req.session.destroy(err=>{ 
+            if(err){
+              return  console.log(err)
+            }
+            res.clearCookie('connect.sid')
+            res.status(200).json({ success: `cookies deleted` })
+            
+        })
+        
+      
+     
+    } 
   catch (error)  {
 res.status(400).json(error)
     }

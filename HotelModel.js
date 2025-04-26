@@ -19,7 +19,7 @@ const hotelSchema = new mongoose.Schema({
   city: { type: String,  },
   country: { type: String,  },
   description: { type: String,  },
-  type: { type: String,  },
+  type:  [{type: String},  ],
   adultCount: { type: Number,  },
   childCount: { type: Number,  },
   facilities: [{ type: String,  }],
