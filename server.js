@@ -3,12 +3,11 @@ import mongoose from 'mongoose'
 import dotenv from 'dotenv'
 import path, { dirname } from 'path'
 import hotelRoute from './hotel.js'
-import roomRoute from './room.js'
 import userRoute from './user.js'
 import session from 'express-session'
 import ConnectMongoDBSession from 'connect-mongodb-session'
-import Hotel from './HotelModel.js'
-import fs from 'fs'
+import bookingRoute from './booking.js'
+
 
 dotenv.config() 
 const MONGO_URI=`mongodb+srv://${process.env.MONGODB_USER}:${process.env.MONGODB_PASSWORD}@cluster0.k4lgw6j.mongodb.net/${process.env.MONGODB_DB_NAME}`; 
@@ -42,32 +41,44 @@ const store=new MongoDBStore({
   expires:1000 * 60 * 60 * 24 * 30
 })
 app.use(express.urlencoded({extended:true}))
-app.use(express.json())
+app.use(express.json()) 
 
-app.use(session({secret:process.env.SESSION_SECRET_KEY,resave:false,saveUninitialized:false,store,cookie:{}}))
+app.use(session(
+  {
+    secret:process.env.SESSION_SECRET_KEY,
+    resave:false,
+    saveUninitialized:false,
+    store,
+    cookie:{
+      
+    }
+    // maxAge:1000 * 60 * 60 * 24 * 30
+}
+))
 
-app.use('/booking',hotelRoute)
+
+app.use('/hotel',hotelRoute)
 
 
 app.use('/user',userRoute)
 
-
+app.use('/booking',bookingRoute)
 app.use('/room',roomRoute)
 
 app.use(express.static(path.join(__dirname,'public')))
 if(process.env.NODE_ENV==='production'){
   app.use(express.static(path.join(__dirname,'hotel','dist')))
 
-  app.get('*',(req,res,next)=>{
+  app.get('*',(req,res)=>{
     res.sendFile(path.resolve(__dirname,'hotel','dist','index.html'))
-    return next()
+   
   })
 }
   
 
 app.listen(process.env.PORT || 5000,()=>{
    console.log(`server running at ${process.env.PORT}`)
-   
+    
 })
- 
- 
+     
+ // new comment added
