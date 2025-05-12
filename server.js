@@ -50,8 +50,8 @@ app.use(session(
     saveUninitialized:false,  
     store,
     cookie:{
-      sameSite:'lax',
-      secure:false,
+      sameSite:'none',
+      secure:true,
       
     },
     
