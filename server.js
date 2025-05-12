@@ -50,7 +50,6 @@ app.use(session(
     saveUninitialized:false,  
     store,
     cookie:{
-      sameSite:'none',
       secure:true,
       
     },
