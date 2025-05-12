@@ -28,7 +28,7 @@ const MongoDBStore=ConnectMongoDBSession(session)
 const app=express()
 
 app.use((req,res,next)=>{
-  res.setHeader('Access-Control-Allow-Origin','http://localhost:5173')
+  res.setHeader('Access-Control-Allow-Origin','https://hotel-zihk.onrender.com')
   res.setHeader('Access-Control-Allow-Headers','X-Requested-With, X-HTTP-Method-Override,Origin,Authorization,Content-Type, Accept')
   res.setHeader('Access-Control-Allow-Credentials',true)
   res.setHeader('Access-Control-Allow-Methods','GET,POST,PUT,PATCH,DELETE,OPTIONS')
@@ -47,11 +47,14 @@ app.use(session(
   {
     secret:process.env.SESSION_SECRET_KEY,
     resave:false,
-    saveUninitialized:false,
+    saveUninitialized:false,  
     store,
     cookie:{
+      sameSite:'lax',
+      secure:false,
       
-    }
+    },
+    
     // maxAge:1000 * 60 * 60 * 24 * 30
 }
 ))
@@ -63,7 +66,7 @@ app.use('/hotel',hotelRoute)
 app.use('/user',userRoute)
 
 app.use('/booking',bookingRoute)
-app.use('/room',roomRoute)
+
 
 app.use(express.static(path.join(__dirname,'public')))
 if(process.env.NODE_ENV==='production'){

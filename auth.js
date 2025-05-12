@@ -4,10 +4,11 @@ import User from "./ProfileModel.js"
 const Auth= async(req,res,next)=>{
     // req?.session?.isLoggedin=true
     
-  const user=await User.findById(req.session.user?.id)
+  const user=await User.findById(req.session.user.id)
   req.user=user
-  req.user.id=user?._id
-// console.log(req.user.id)
+  req.user.id=user._id 
+  req.user.isAdmin=user.isAdmin
+console.log(user)
  
   if(!req.user.isAdmin){
         return next()

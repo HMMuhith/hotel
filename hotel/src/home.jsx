@@ -8,7 +8,9 @@ const [Hotel,setHotel]=useState([])
 
 useEffect(()=>{
   const Request=async()=>{
-    const httpRequest=await axios.get(`${import.meta.env.VITE_BACKEND_URL}/hotel`)
+    const httpRequest=await axios.get(`${import.meta.env.VITE_BACKEND_URL}/hotel`,{
+      withCredentials:true
+    })
     const response=await httpRequest.data
     console.log(response)
     setHotel(response)
@@ -18,7 +20,8 @@ useEffect(()=>{
 const topframeHotel=Hotel?.slice(0,2) || []
 const bottomframeHotel=Hotel?.slice(2) || []
 
-
+console.log(topframeHotel)
+console.log(bottomframeHotel)
   return (
     <>
     <Title title='Hotel' />

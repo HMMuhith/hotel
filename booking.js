@@ -8,17 +8,18 @@ router.get('/',Auth, async(req,res)=>{
     try {
         const hotels=await Hotel.find({
             bookings:{$elemMatch:{userId:req.user.id}}
-        })
-console.log(req.user.id)
+      
+        }) 
+
        const response= hotels?.map((hotel)=>{
         const bookings=hotel.bookings?.filter((booking)=>{
             return booking?.userId===req.user?.id
-        })
+        }) 
 
         const userBookings={
             ...hotel.toObject(),
             bookings
-        }
+        } 
         return userBookings
        })
 

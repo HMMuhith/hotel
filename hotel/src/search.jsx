@@ -45,7 +45,9 @@ function Search() {
 useEffect(()=>{
   const request = async()=>{ 
     // 
-      const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/hotel/search?${searchQ}`)
+      const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/hotel/search?${searchQ}`,{
+        withCredentials:true
+      })
       
       const data = await response.data
       setHoteldata(data)

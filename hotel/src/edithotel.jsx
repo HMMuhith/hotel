@@ -28,7 +28,9 @@ function EditHotel() {
 
   useEffect(() => {
     const request = async () => {
-      const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/hotel/find/${hotelid}`)
+      const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/hotel/find/${hotelid}`, {
+        withCredentials: true
+      })
       const data = await response.data
 
 
@@ -79,7 +81,7 @@ function EditHotel() {
         formdata.append('facilities', item)
       })
 
-      const req = await axios.put(`http://127.0.0.1:7000/booking/${hotelid}`, formdata, {
+      const req = await axios.put(`${import.meta.env.VITE_BACKEND_URL}/booking/${hotelid}`, formdata, {
         withCredentials: true
       })
       console.log(req)
@@ -89,32 +91,34 @@ function EditHotel() {
   }
   return (
     <>
-      <form className='flex flex-col gap-10' onSubmit={submit} >
-        <div className='flex flex-col gap-4 p-3'>
-          <h2 className='text-3xl font-bold ml-2 mb-3'>Add Hotel</h2>
-          <label className='p-3  font-semibold' htmlFor="name" >
+      <form className='flex flex-col gap-10 p-6' onSubmit={submit} >
+        <h2 className='p-3 font-IBM text-sky-700  decoration-zinc-800 underline underline-offset-8 text-3xl font-bold mb-3'>Edit Hotel</h2>
+        <div className='flex flex-col border border-zinc-300 w-5xl rounded m-auto gap-4'>
+          <label className='text-gray-700 p-3 text-sm font-bold flex-1' htmlFor="name" >
             Name
-            <input type="text" className='border rounded w-[60rem] ml-14 py-1 px-2 font-normal' name="name" id="name" value={name} onChange={(e) => setName(e.target.value)} />
+            <input type="text" className='border border-zinc-300 rounded  ml-17 w-[42.4rem] py-1 pl-4 font-normal' name="name" id="name" value={name} onChange={(e) => setName(e.target.value)} />
           </label>
-          <label className='p-3 font-semibold' htmlFor="country" >
+          <label className='text-gray-700 p-3 text-sm font-bold flex-1' htmlFor="country" >
             Country
-            <input type="text" className='border rounded w-[60rem] ml-10 py-1 px-2 font-normal' name="country" id="country" value={country} onChange={e => setCountry(e.target.value)} />
+            <input type="text" className='border border-zinc-300 rounded w-[42.4rem] ml-13 py-1  font-normal' name="country" id="country" value={country} onChange={e => setCountry(e.target.value)} />
           </label>
-          <label className='p-3 font-semibold' htmlFor="city" >
+          <label className='text-gray-700 p-3 text-sm font-bold flex-1' htmlFor="city" >
             City
-            <input type="text" className='border rounded  py-1 px-2 font-normal w-[60rem] ml-18' onChange={e => setCity(e.target.value)} value={city} name="city" id="city" />
+            <input type="text" className='border border-zinc-300 rounded  py-1 px-2 font-normal w-[42.4rem] ml-20' onChange={e => setCity(e.target.value)} value={city} name="city" id="city" />
           </label>
-          <label className='p-3 font-semibold' htmlFor="description" >
-            Description
+          <div className='flex w-[60rem] justify-start'>
+            <label className='text-gray-700 p-3 block mt-2.5 text-sm font-bold' htmlFor="description" >
+              Description
+            </label>
+            <textarea className='resize-none border border-zinc-300 rounded ml-[1.1rem] font-normal' cols={90} value={description} onChange={e => setDecription(e.target.value)} name="description" id="description" rows={3}></textarea>
 
-            <textarea className='resize-none border rounded  py-1 px-2 font-normal w-[60rem] ml-4' value={description} onChange={e => setDecription(e.target.value)} name="description" id="description" rows={3}></textarea>
-          </label>
-          <label htmlFor="price" className=' p-3  text-sm font-semibold '>
-            Price per night <input type="number" className='w-[60rem] ml-1 border rounded  py-1 px-2 font-normal' min={1} name="pricePerNight" value={pricePerNight} onChange={e => setPricepernight(e.target.value)} id="price" />
+          </div>
+          <label htmlFor="price" className=' p-3 text-sm font-semibold '>
+            Price per night <input type="number" className='border border-zinc-300 rounded w-[42.4rem] py-1 px-2 ml-2 font-normal' min={1} name="pricePerNight" value={pricePerNight} onChange={e => setPricepernight(e.target.value)} id="price" />
           </label>
           <label htmlFor="starRating" className=' p-3 text-sm font-semibold ' >
             Rating
-            <select name="starRating" className='border rounded ml-16 p-2 bg-zinc-200 font-normal w-[27rem]' id="starRating" onChange={e => setstarRating(e.target.value)} value={starRating} >
+            <select name="starRating" className='border-zinc-300 rounded ml-16 p-1 bg-zinc-200 font-normal w-[27rem]' id="starRating" onChange={e => setstarRating(e.target.value)} value={starRating} >
               <option key={0} value="">Select rating</option>
               {[...Array(1, 2, 3, 4, 5)].map((num, index) => {
                 return (
@@ -126,57 +130,58 @@ function EditHotel() {
               }
             </select>
           </label>
+        </div>
+                    <div>
+                      <h2 className='text-3xl font-IBM font-bold mb-3 ml-2.5 text-sky-700 underline p-3 underline-offset-8 decoration-zinc-800'>Type</h2>
+                      <div className='grid grid-cols-3 place-items-center gap-2 p-3 border border-zinc-300 rounded-lg m-auto w-4xl'>
 
+                        {hotelTypes.map((item, index) => (
+                          <>
+                            <div className='border border-zinc-400 cursor-pointer h-14  flex w-[10rem] justify-center items-center hover:bg-blue-300 active:bg-blue-600 rounded-full font-semibold'>
+                              <label htmlFor={index} className='flex justify-center cursor-pointer items-center  rounded-2xl'>
+                                <input type="radio" id={index} key={index} name="type" onChange={e => { console.log(e); return setType(prev => { return e.target.checked ? [e.target.value] : prev.filter(type => type !== e.target.value) }) }} value={item} className='hidden ' />
+                                <span id={index} className='flex justify-center items-center' >{item}</span>
+                              </label>
 
-          <h2 className='mb-2.5 ml-2 font-extrabold text-xl'>Type</h2>
-          <div className='grid grid-cols-5 ml-2 gap-2'>
+                            </div>
+                          </>
+                        ))}
+                        </div>
+                      </div>
+                <div className='' >
+                  <h1 className='text-3xl p-3 font-bold mb-3 text-sky-700 underline ml-2.5 decoration-zinc-800 decoration-3 underline-offset-8'>Facilities</h1>
+                  <div className='grid grid-cols-5 gap-3 ml-5 border border-zinc-300 rounded-lg'>
+                    {facilities.map((item, index) => {
+                      return <>
 
-            {hotelTypes.map((item, index) => (
-              <>
-                <div className='border border-black flex px-2 justify-center items-center hover:bg-blue-300 active:bg-blue-600 rounded-full font-semibold h-14'>
-                  <label htmlFor={index} className='w-24 flex justify-center items-center cursor-pointer rounded-2xl'>
-                    <input type="radio" id={index} key={index} name="type" onChange={e => { console.log(e); return setType(prev=>{return e.target.checked?[e.target.value]:prev.filter(type=>type!==e.target.value)}) }} value={item} className='hidden ' />
-                    <span id={index} className='py-2  px-2 flex justify-center items-center ' >{item}</span>
-                  </label>
-
+                        <label className="text-sm flex gap-1 text-gray-700 p-3">
+                          <input type="checkbox" key={index} name="facilities" className=' cursor-pointer text-black font-bold text-xl' onChange={e => setfacility(prev => {
+                            return e.target.checked === true ? [...prev, e.target.value] : prev.filter(item => item !== e.target.value)
+                          })} value={item} />
+                          <span className='font-semibold'>{item}</span>
+                        </label>
+                      </>
+                    })}
+                  </div>
                 </div>
-              </>
-            ))}
-          </div>
-          <div className='ml-2' >
-            <h1 className='text-2xl font-bold mb-3'>Facilities</h1>
-            <div className='grid grid-cols-5 gap-3 ml-4'>
-              {facilities.map((item, index) => {
-                return <>
+                        <div>
+                          <h2 className='text-3xl font-IBM ml-6 text-sky-700 underline underline-offset-8 decoration-3 decoration-zinc-800 font-bold mb-6'>Guest</h2>
+                          <div className='grid grid-cols-2 p-6 gap-5 border ml-5 rounded-lg border-zinc-300'>
+                            <label htmlFor="adult" className='text-gray-700 p-3  font-semibold'>
+                              Adults
+                              <input type='number' className='border border-zinc-400 rounded w-full py-2 px-3 font-normal' name="adultCount" value={adultCount} onChange={e => setAdultcount(e.target.value)} min={1} />
+                            </label>
 
-                  <label className="text-sm flex gap-1 text-gray-700">
-                    <input type="checkbox" key={index} name="facilities" className=' text-black font-bold text-xl' onChange={e => setfacility(prev => {
-                      return e.target.checked === true ? [...prev, e.target.value] : prev.filter(item => item !== e.target.value)
-                    })} value={item} />
-                    <span className='font-semibold'>{item}</span>
-                  </label>
-                </>
-              })}
-            </div>
-          </div>
-          <div>
-            <h2 className='text-2xl font-bold mb-3 ml-2'>Guest</h2>
-            <div className='grid grid-cols-2 p-6 gap-5  '>
-              <label htmlFor="adult" className='text-gray-700  font-semibold'>
-                Adults
-                <input type='number' className='border rounded w-full py-2 px-3 font-normal' name="adultCount" value={adultCount} onChange={e => setAdultcount(e.target.value)} min={1} />
-              </label>
-            
-            
-              <label htmlFor="child" className='text-gray-700  font-semibold'>
-                Children
-                <input type='number' className='border rounded w-full py-2 px-3 font-normal' name="childCount" value={childCount} onChange={e => setChildcount(e.target.value)} min={1} />
-              </label>
-            </div>
-          </div>
+
+                            <label htmlFor="child" className='text-gray-700 p-3  font-semibold'>
+                              Children
+                              <input type='number' className='border border-zinc-400 rounded w-full py-2 px-3 font-normal' name="childCount" value={childCount} onChange={e => setChildcount(e.target.value)} min={1} />
+                            </label>
+                          </div>
+                        </div>
           <div className='text-2xl font-bold mb-3'>
-            <h2 className='text-2xl font-bold mb-3 ml-2'>Image </h2>
-            <div className='rounded flex flex-col gap-4 p-4'>
+            <h2 className='text-3xl font-bold mb-6 ml-6 text-sky-700 underline underline-offset-8 decoration-zinc-800 decoration-3'>Image </h2>
+            <div className='border border-zinc-300 rounded-lg ml-5 p-4 flex flex-col gap-4'>
               <input type="file" className='cursor-pointer file:cursor-pointer file:mr-4 file:rounded-full file:border-0 file:bg-blue-900 file:px-4 file:py-2 file:text-sm file:font-semibold file:text-white' name="photos" onChange={e => {
                 console.log(e.target.files); console.log(e.target.value);
                 return setPhotos(e.target.files)
@@ -188,10 +193,10 @@ function EditHotel() {
            <TypeSection/>
            <Facilities/>
            <ImageUpload/> */}
-          <div className='ml-4'>
+          <div className='ml-5'>
             <button type="submit" className='rounded px-3 py-2 bg-blue-700 text-white cursor-pointer'>Update</button>
           </div>
-        </div>
+        
       </form>
     </>
   )

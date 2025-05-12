@@ -24,7 +24,9 @@ console.log(location)
 const navigate=useNavigate()
   useEffect(()=>{
     const request=async()=>{
-const Data= await axios.get(`${import.meta.env.VITE_BACKEND_URL}/hotel/find/${hotelid}`)
+const Data= await axios.get(`${import.meta.env.VITE_BACKEND_URL}/hotel/find/${hotelid}`,{
+  withCredentials:true
+})
 const response=await Data.data
 console.log(Data)
 setdetails(response)
@@ -140,7 +142,7 @@ navigate(`/booking/${hotelid}`)
                         </div>
                         
                           <button className="bg-blue-600 text-white h-full p-2 font-bold hover:bg-blue-500 text-xl">
-                           {user? <div>Book Now</div> : <div>Please Login to book</div>}
+                           {user? <div >Book Now</div> : <div>Please Login to book</div>}
                           </button>
                        
                       </div>

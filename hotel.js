@@ -28,7 +28,7 @@ const storage = new CloudinaryStorage({
 const upload = multer({ storage })
 const router = express.Router()
 
-router.post('/', Auth, upload.array('photos'), async (req, res) => {
+router.post('/',  upload.array('photos'), async (req, res) => {
 
     try {
         const hotel = new Hotel(
@@ -58,11 +58,11 @@ router.post('/', Auth, upload.array('photos'), async (req, res) => {
 
 const stripe=new Stripe(process.env.STRIPE_API_KEY)
 
-router.post('/:hotelid/payment',Auth, async(req,res)=>{
+router.post('/:hotelid/payment', async(req,res)=>{
 
-    try{
+    try{ 
     const NumberofNights=req.body.NumberofNights
-    const userId=req.user.id
+    // const userId=req.user.id
     const hotelid=req.params.hotelid
     const hotel =await Hotel.findById(hotelid)
     const totalCost=hotel.pricePerNight*NumberofNights
@@ -72,7 +72,7 @@ router.post('/:hotelid/payment',Auth, async(req,res)=>{
 amount:totalCost*100,
 metadata:{
     hotelid, 
-    userId 
+    // userId 
 }
     }) 
 if(!payment.client_secret){
@@ -95,7 +95,7 @@ catch(error){
 }
 )
 
-router.post('/:hotelid/booking',Auth, async(req,res)=>{
+router.post('/:hotelid/booking', async(req,res)=>{
     try {
        const paymentID=req.body.paymentID
 const payment=await stripe.paymentIntents.retrieve(paymentID)
@@ -122,7 +122,8 @@ return res.status(400).json({message:`payment intent mismatch`})
 // paymentID:payment.id
 
 // }
-const booking={...req.body,userId:req.user.id}
+// const booking={...req.body,userId:req.user.id}
+const booking={...req.body}
 
 const updateBooking= await Hotel.findByIdAndUpdate(req.params.hotelid,{
     $push:{bookings:booking}
@@ -132,12 +133,12 @@ if(!updateBooking){
 }
 await updateBooking.save()
 res.status(200).json({Bookingupdated:updateBooking})
-
+ 
 
     } catch (error) {
         res.status(500).json({message:`${error} found`})
-    }
-})
+    } 
+}) 
 
 router.get('/',  async (req, res) => {
     try {
@@ -159,12 +160,12 @@ router.get('/find/:hotelid',async (req, res) => {
     }
 })
 
-router.get('/publish', Auth,async(req,res)=>{
+router.get('/publish', async(req,res)=>{
     try {
         res.send({
             publish_key:process.env.STRIPE_PUBLISH_KEY
         })
-    } catch (error) {
+    } catch (error) { 
         res.status(400).json({error})
     }
 })
@@ -214,11 +215,11 @@ catch(error){
 })
 
 
-router.put('/:hotelid', Auth, upload.array('photos'), async (req, res) => {
+router.put('/:hotelid',  upload.array('photos'), async (req, res) => {
     try {
         const updatedItems = await Hotel.findByIdAndUpdate(req.params.hotelid, {
             $set: {
-                userId:req.user.id,
+                // userId:req.user.id,
                 name: req.body.name,
                 type: req.body.type,
                 country:req.body.country,

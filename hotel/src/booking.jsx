@@ -45,7 +45,8 @@ function Booking() {
           },
           headers: {
             'Content-Type': 'application/json'
-          }
+          },
+          withCredentials:true
         })
         const data = await request.data
         console.log(NumberofNights)
@@ -97,12 +98,13 @@ function Booking() {
     formdata.append('hotelid', hotelid)
     try {
         
-      const Request = await axios(`${import.meta.env.VITE_BACKEND_URL}/hotel/${hotelid}/booking`, {
+      const Request = await axios(`${import.meta.env.VITE_BACKEND_URL}/hotel/67f91423e5f4d167b7bac536/booking`, {
         method:'post',
         data:formdata,
         headers:{
           'Content-Type':'application/json'
-        }
+        },
+        withCredentials:true
       })
       const response = await Request.data
       console.log(response)
@@ -170,12 +172,12 @@ setprocessing(false)
             onSubmit={submit}
             className="grid grid-cols-1 gap-5 rounded-lg border border-slate-300 p-5"
           >
-            <span className="text-3xl font-bold">Confirm Your Details</span>
+            <span className="text-3xl text-sky-700 font-bold">Confirm Your Details</span>
             <div className="grid grid-cols-2 gap-6">
               <label className=" text-sm font-bold flex-1" >
-                First Name :
+                Name :
                 <input
-                  className="mt-1 border rounded w-full py-2 px-3 text-black  font-normal"
+                  className="mt-1 border border-zinc-300 rounded-lg w-full py-2 px-3 text-black  font-normal"
                   name='name'
                   type="text"
                   readOnly
@@ -186,7 +188,7 @@ setprocessing(false)
               <label className=" text-sm font-bold flex-1">
                 Email
                 <input
-                  className="mt-1 border rounded w-full py-2 px-3 text-black  font-normal"
+                  className="mt-1 border border-zinc-300 rounded-lg w-full py-2 px-3 text-black  font-normal"
                   name='email'
                   type="text"
                   readOnly
@@ -199,7 +201,7 @@ setprocessing(false)
             <div className="space-y-2">
               <h2 className="text-xl font-semibold">Your Price Summary</h2>
 
-              <div className="bg-blue-200 p-4 rounded-md">
+              <div className="bg-slate-900 text-white p-4 rounded-md">
                 <div className="font-semibold text-lg">
                   Total Cost: £{Paymentdata?.totalCost?.toFixed(2)}
                 </div>
@@ -213,7 +215,7 @@ setprocessing(false)
             {/* <PaymentElement className='rounded border border-zinc-200 h-auto' /> */}
  <CardElement
           id="payment-element"
-          className="border rounded-md p-2 text-sm"
+          className="border border-zinc-300 rounded-md p-2 text-sm"
         />
 
 

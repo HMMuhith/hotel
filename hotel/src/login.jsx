@@ -47,7 +47,7 @@ const handleUnit = (e) => {
 
 function testify(){
   setTimeout(()=>{
-    return navigate(redirect);
+    return navigate('/');
   },3000)
 }
 
@@ -82,14 +82,16 @@ const submit = async (e) => {
     password: user.password
   }
   try {
-  const response = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/user/login`,newUser)
+  const response = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/user/login`,newUser,{
+    withCredentials:true
+  })
 
 const data=response.data
 dispatch(LoginUser(data))
 console.log(data)
 setstatus({type:'success'})
 // toast.success(`You signed in successfully`)
-// testify()
+testify()
 
   
 }
@@ -136,14 +138,15 @@ function failing(){
           </div><br />
           <div className='flex justify-center items-center'>
           <p>
-            New here? <Link to='/signup' style={{color:`blue`}}>Sign up</Link>
+            New here? <Link to='/register' style={{color:`blue`}}>Sign up</Link>
           </p>
           </div>
           
           
         </form>
-        {status.type=='success' && <Success message={`You signed in successfully`}/>}
+        {status.type=='success' && <Success message={`You signed in successfully`}/> }
           {status.type=='fail' && <div id="fail"><Fail message={`Failed attempt`}/></div> }
+          
           {status.type=='fail' && failing() }
      
       </div>

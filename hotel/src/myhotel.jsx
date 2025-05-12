@@ -9,7 +9,9 @@ function MyHotel() {
 
     useEffect(() => {
         const request = async () => {
-            const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/hotel`)
+            const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/hotel`,{
+                withCredentials:true
+            })
             const data = await response.data
             console.log(data)
             setdata(data)
@@ -19,12 +21,12 @@ function MyHotel() {
 
 
     return (
-        <div className="overflow-x-hidden border border-black w-svw h-auto">
+        <div className="overflow-x-hidden mt-3 w-svw h-auto">
             <span className="flex justify-between w-svw">
                 <h1 className="text-3xl mt-2 ml-7 font-bold">My Hotels</h1>
                 <Link
                     to="/addhotel"
-                    className="flex bg-rose-600 rounded text-white text-xl font-bold mr-6 my-2 p-2 hover:bg-blue-500"
+                    className="flex bg-slate-800 rounded text-white text-xl font-bold mr-10 my-2 py-2 px-4 hover:opacity-75"
                 >
                     Add Hotel
                 </Link>
@@ -61,7 +63,7 @@ function MyHotel() {
                         <span className="flex justify-end">
                             <Link
                                 to={`/edithotel/${hotel._id}`}
-                                className="flex bg-rose-600 text-white text-xl -mr-3 rounded font-bold p-2 hover:bg-blue-500"
+                                className="flex bg-pink-600 text-white text-md rounded font-bold py-2 px-4 hover:bg-blue-500"
                             >
                                 View Details
                             </Link>

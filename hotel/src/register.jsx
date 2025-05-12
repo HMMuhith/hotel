@@ -154,30 +154,30 @@ setError({...error,passwordempty:''})
       <form noValidate className='bg-white h-full border-2 border-solid  shadow-[1px_1px_8px_1px_rgba(0,0,0,0.15)] rounded px-8 pt-6 pb-8 mb-4' onSubmit={submit}>
         <div>
 
-          <input type="text" className='shadow border-black appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline' name="name" id="" onChange={handleUnit} value={user.name} placeholder='Name' />
+          <input type="text" className='focus:outline-blue-700 focus:outline-2 focus:border-none focus:outline-offset-1 focus:shadow-outline shadow border-black appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight ' name="name" id="" onChange={handleUnit} value={user.name} placeholder='Name' />
 
 {validator.isEmpty(user.name) && <span className='text-red-500 text-sm'>{error.NAMEempty}</span> || !validator.isLength(user.name,{min:2,max:30}) && <span className='text-red-500 text-sm'>{error.NAMEval}</span>}
         </div><br />
         <div>
 
-          <input type="email" className='shadow appearance-none border-black border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline' name="email" id="" onChange={handleUnit} value={user.email} placeholder='Email'  />
+          <input type="email" className='shadow appearance-none border-black border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-blue-700 focus:outline-2 focus:border-none focus:outline-offset-1  focus:shadow-outline' name="email" id="" onChange={handleUnit} value={user.email} placeholder='Email'  />
            {validator.isEmpty(user.email) && <span className='text-red-500 text-sm'>{error.emailempty}</span> || !validator.isEmail(user.email) && <span className='text-red-500 text-sm'>{error.emailat}</span>}
         </div><br />
         <div>
 
-          <input type="number" className='shadow appearance-none border-black border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline' name="phone" id="" onChange={handleUnit} value={user.phone} placeholder='Phone'  />
+          <input type="number" className='shadow appearance-none border-black border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-blue-700 focus:outline-2 focus:border-none focus:outline-offset-1 focus:shadow-outline' name="phone" id="" onChange={handleUnit} value={user.phone} placeholder='Phone'  />
            {validator.isEmpty(user.phone) && <span className='text-red-500 text-sm'>{error.phoneempty}</span> || !validator.isEmail(user.phone) && <span className='text-red-500 text-sm'>{error.phoneval}</span>}
         </div><br />
         <div>
 
-          <input type="password" className='shadow border-black appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline' name="password" id="" onChange={handleUnit} value={user.password} placeholder='Password'  />
+          <input type="password" className='shadow border-black appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-blue-700 focus:outline-2 focus:border-none focus:outline-offset-1 focus:shadow-outline' name="password" id="" onChange={handleUnit} value={user.password} placeholder='Password'  />
           {
           validator.isEmpty(user.password) && <span className='text-red-500 text-sm'>{error.passwordempty}</span> || 
           !validator.isLength(user.password,{ min: 4, max: 15}) && <span className='text-red-500 text-sm'>{error.passwordval}</span>}
         </div><br />
         <div>
 
-          <input type="password" className='shadow border-black appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline' name="confirm_password" id="" onChange={handleUnit} value={user.confirm_password} placeholder='Confirm Password'  />
+          <input type="password" className='shadow border-black appearance-none border focus:outline-blue-700 focus:outline-2 focus:border-none focus:outline-offset-1 rounded w-full py-2 px-3 text-gray-700 leading-tight focus:shadow-outline' name="confirm_password" id="" onChange={handleUnit} value={user.confirm_password} placeholder='Confirm Password'  />
           {validator.isEmpty(user.confirm_password) && <span className='text-red-500 text-sm'>{error.confirm_password}</span> || !validator.equals(user.password,user.confirm_password) && <span className='text-red-500 text-sm'>{error.confirm_passwordmatch}</span>}
         </div><br /><br />
         <div className='flex justify-center items-center mb-3'>
