@@ -26,7 +26,7 @@ connection()
 const __dirname=path.resolve()
 const MongoDBStore=ConnectMongoDBSession(session)
 const app=express()
-app.set('trust proxy',1)
+app.set('trust proxy',true)
 app.use((req,res,next)=>{
   res.setHeader('Access-Control-Allow-Origin','https://hotel-delta-weld.vercel.app')
   res.setHeader('Access-Control-Allow-Headers','X-Requested-With, X-HTTP-Method-Override,Origin,Authorization,Content-Type, Accept')
