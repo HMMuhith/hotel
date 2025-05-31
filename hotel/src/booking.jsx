@@ -25,9 +25,14 @@ function Booking() {
   const [BookingData, setBookingData] = useState()
 
 
+  const check_in=new Date(checkIn)
+  const check_out=new Date(checkOut)
+  const newcheckin=check_in.toDateString()
+  const newcheckout=check_out.toDateString()
+  
   useEffect(() => {
     if (checkIn && checkOut) {
-      const Night = Math.abs(checkOut.getTime() - checkIn.getTime()) / (1000 * 60 * 60 * 24)
+      const Night = Math.abs(check_out.getTime() - check_in.getTime()) / (1000 * 60 * 60 * 24)
       setNumberofNights(Math.ceil(Night).toString())
     }
     console.log(NumberofNights)
@@ -146,11 +151,11 @@ setprocessing(false)
                   <div className="flex justify-between">
                     <div>
                       Check-in
-                      <div className="font-bold"> {checkIn?.toDateString()}</div>
+                      <div className="font-bold"> {newcheckin}</div>
                     </div>
                     <div>
                       Check-out
-                      <div className="font-bold"> {checkOut?.toDateString()}</div>
+                      <div className="font-bold"> {newcheckout}</div>
                     </div>
                   </div>
                   <div className="border-t border-b py-2">
