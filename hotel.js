@@ -62,7 +62,7 @@ router.post('/:hotelid/payment', async(req,res)=>{
 
     try{ 
     const NumberofNights=req.body.NumberofNights
-    // const userId=req.user.id
+    const userId=req.user.id
     const hotelid=req.params.hotelid
     const hotel =await Hotel.findById(hotelid)
     const totalCost=hotel.pricePerNight*NumberofNights
@@ -72,7 +72,7 @@ router.post('/:hotelid/payment', async(req,res)=>{
 amount:totalCost*100,
 metadata:{
     hotelid, 
-    // userId 
+    userId 
 }
     }) 
 if(!payment.client_secret){
@@ -107,23 +107,23 @@ if(payment.metadata.hotelid !== req.params.hotelid){
 return res.status(400).json({message:`payment intent mismatch`})
 }
 
-// if(payment.status!=='succeeded'){
-//     return res.status(400).json({message:`Payment not succeeded`, status:`${payment.status}`})
-// }
+if(payment.status!=='succeeded'){
+    return res.status(400).json({message:`Payment not succeeded`, status:`${payment.status}`})
+}
 
-// const booking={
-//     name:req.body.name,
-// email: req.body.email,
-// adultCount:req.body.adultCount,
-// childcount :req.body.childCount,
-// checkIn:req.body.checkIn,
-// checkOut:req.body.checkOut,
-// totalCost: req.body.totalCost,
-// paymentID:payment.id
+const booking={
+    name:req.body.name,
+email: req.body.email,
+adultCount:req.body.adultCount,
+childcount :req.body.childCount,
+checkIn:req.body.checkIn,
+checkOut:req.body.checkOut,
+totalCost: req.body.totalCost,
+paymentID:payment.id
 
-// }
-// const booking={...req.body,userId:req.user.id}
-const booking={...req.body}
+}
+const booking={...req.body,userId:req.user.id}
+// const booking={...req.body}
 
 const updateBooking= await Hotel.findByIdAndUpdate(req.params.hotelid,{
     $push:{bookings:booking}
@@ -219,7 +219,7 @@ router.put('/:hotelid',  upload.array('photos'), async (req, res) => {
     try {
         const updatedItems = await Hotel.findByIdAndUpdate(req.params.hotelid, {
             $set: {
-                // userId:req.user.id,
+                userId:req.user.id,
                 name: req.body.name,
                 type: req.body.type,
                 country:req.body.country,
