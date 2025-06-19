@@ -36,7 +36,7 @@ const searchSlice = createSlice({
             sessionStorage.setItem('adultCount',action.payload?.toString() || 1)
         },
         CHILDCOUNT(state,action){
-            state.childCount=action.payload
+            state.childCount=action.payload || 0
             sessionStorage.setItem('childCount', action.payload?.toString())
         },
         HOTELID(state,action){
