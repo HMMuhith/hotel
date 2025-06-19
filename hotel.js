@@ -28,7 +28,7 @@ const storage = new CloudinaryStorage({
 const upload = multer({ storage })
 const router = express.Router()
 
-router.post('/',  upload.array('photos'), async (req, res) => {
+router.post('/', Auth, upload.array('photos'), async (req, res) => {
 
     try {
         const hotel = new Hotel(
@@ -58,7 +58,7 @@ router.post('/',  upload.array('photos'), async (req, res) => {
 
 const stripe=new Stripe(process.env.STRIPE_API_KEY)
 
-router.post('/:hotelid/payment', async(req,res)=>{
+router.post('/:hotelid/payment', Auth, async(req,res)=>{
 
     try{ 
     const NumberofNights=req.body.NumberofNights
@@ -95,7 +95,7 @@ catch(error){
 }
 )
 
-router.post('/:hotelid/booking', async(req,res)=>{
+router.post('/:hotelid/booking', Auth, async(req,res)=>{
     try {
        const paymentID=req.body.paymentID
 const payment=await stripe.paymentIntents.retrieve(paymentID)
@@ -215,7 +215,7 @@ catch(error){
 })
 
 
-router.put('/:hotelid',  upload.array('photos'), async (req, res) => {
+router.put('/:hotelid', Auth, upload.array('photos'), async (req, res) => {
     try {
         const updatedItems = await Hotel.findByIdAndUpdate(req.params.hotelid, {
             $set: {
