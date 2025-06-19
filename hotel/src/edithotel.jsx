@@ -96,21 +96,21 @@ function EditHotel() {
         <div className='flex flex-col border border-zinc-300 w-5xl rounded m-auto gap-4'>
           <label className='text-gray-700 p-3 text-sm font-bold flex-1' htmlFor="name" >
             Name
-            <input type="text" className='border border-zinc-300 rounded  ml-17 w-[42.4rem] py-1 pl-4 font-normal' name="name" id="name" value={name} onChange={(e) => setName(e.target.value)} />
+            <input type="text" className='border border-zinc-300 rounded  ml-17 w-[42.4rem] py-1 pl-2 font-normal' name="name" id="name" value={name} onChange={(e) => setName(e.target.value)} />
           </label>
           <label className='text-gray-700 p-3 text-sm font-bold flex-1' htmlFor="country" >
             Country
-            <input type="text" className='border border-zinc-300 rounded w-[42.4rem] ml-13 py-1  font-normal' name="country" id="country" value={country} onChange={e => setCountry(e.target.value)} />
+            <input type="text" className='border border-zinc-300 rounded w-[42.4rem] ml-13 py-1 pl-2 font-normal' name="country" id="country" value={country} onChange={e => setCountry(e.target.value)} />
           </label>
           <label className='text-gray-700 p-3 text-sm font-bold flex-1' htmlFor="city" >
             City
-            <input type="text" className='border border-zinc-300 rounded  py-1 px-2 font-normal w-[42.4rem] ml-20' onChange={e => setCity(e.target.value)} value={city} name="city" id="city" />
+            <input type="text" className='border border-zinc-300 rounded  py-1 pl-2 font-normal w-[42.4rem] ml-20' onChange={e => setCity(e.target.value)} value={city} name="city" id="city" />
           </label>
           <div className='flex w-[60rem] justify-start'>
             <label className='text-gray-700 p-3 block mt-2.5 text-sm font-bold' htmlFor="description" >
               Description
             </label>
-            <textarea className='resize-none border border-zinc-300 rounded ml-[1.1rem] font-normal' cols={90} value={description} onChange={e => setDecription(e.target.value)} name="description" id="description" rows={3}></textarea>
+            <textarea className='resize-none border border-zinc-300 rounded ml-[1.1rem] font-normal pl-2' cols={90} value={description} onChange={e => setDecription(e.target.value)} name="description" id="description" rows={3}></textarea>
 
           </div>
           <label htmlFor="price" className=' p-3 text-sm font-semibold '>
