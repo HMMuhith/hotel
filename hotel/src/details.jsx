@@ -12,8 +12,8 @@ function Details() {
   const [Details,setdetails]=useState()
 const {user}=useSelector((store)=>store.auth)
   const {checkIn,checkOut,adultCount,childCount}=useSelector(state=>state.search)
-  const [CheckIn,setCheckIn]=useState()
-  const [CheckOut,setCheckOut]=useState()
+  const [CheckIn,setCheckIn]=useState(checkIn)
+  const [CheckOut,setCheckOut]=useState(checkOut)
   const [AdultCount,setadultcount]=useState(adultCount)
   const [Childcount,setchildcount]=useState(childCount)
   const minDate = new Date();
@@ -110,7 +110,7 @@ navigate(`/booking/${hotelid}`)
                             endDate={CheckOut}
                             minDate={minDate}
                             maxDate={maxDate}
-                            placeholderText="Check-in Date"
+                            placeholderText="Check-out Date"
                             className="min-w-full bg-white p-2 focus:outline-none"
                             wrapperClassName="min-w-full"
                           />
