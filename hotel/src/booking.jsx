@@ -101,7 +101,7 @@ function Booking() {
     formdata.append('hotelid', hotelid)
     try {
         
-      const Request = await axios(`${import.meta.env.VITE_BACKEND_URL}/hotel/67f91423e5f4d167b7bac536/booking`, {
+      const Request = await axios(`${import.meta.env.VITE_BACKEND_URL}/hotel/${hotelid}/booking`, {
         method:'post',
         data:formdata,
         headers:{
