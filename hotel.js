@@ -58,7 +58,7 @@ router.post('/', Auth, upload.array('photos'), async (req, res) => {
 
 const stripe=new Stripe(process.env.STRIPE_API_KEY)
 
-router.post('/:hotelid/payment', Auth, async(req,res)=>{
+router.post('/:hotelid/payment',  async(req,res)=>{
 
     try{ 
     const NumberofNights=req.body.NumberofNights
