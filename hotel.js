@@ -151,7 +151,7 @@ router.get('/',  async (req, res) => {
     }
 })
 
-router.get('/find/:hotelid',async (req, res) => {
+router.get('/find/:hotelid',Auth,async (req, res) => {
     try {
         const getHotel = await Hotel.findById(req.params.hotelid)
         res.status(200).json(getHotel)
