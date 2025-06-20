@@ -74,9 +74,7 @@ function Booking() {
   useEffect(() => {
 
     const request = async () => {
-      const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/hotel/find/${hotelid}`, {
-        withCredentials: true
-      })
+      const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/hotel/find/${hotelid}`)
       const data = await response.data
 
       setHotelData(data)
