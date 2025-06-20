@@ -112,6 +112,7 @@ if(payment.status!=='succeeded'){
 }
 
 const booking={
+    userId:req.user.id,
     name:req.body.name,
 email: req.body.email,
 adultCount:req.body.adultCount,
@@ -122,7 +123,7 @@ totalCost: req.body.totalCost,
 paymentID:payment.id
 
 }
-const booking={...req.body,userId:req.user.id}
+// const booking={...req.body,userId:req.user.id}
 // const booking={...req.body}
 
 const updateBooking= await Hotel.findByIdAndUpdate(req.params.hotelid,{
