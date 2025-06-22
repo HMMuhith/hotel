@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useMemo } from 'react'
-import { useParams } from 'react-router-dom'
+import { useParams,useNavigate } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 import axios from 'axios'
 import { useElements, useStripe,CardElement, PaymentElement } from '@stripe/react-stripe-js'
@@ -13,9 +13,10 @@ function Booking() {
   const element = useElements()
 
   const { hotelid } = useParams()
-  const { user } = useSelector(store => store.auth)
+ 
+  const {userinfo} =useSelector(store=>store.auth)
   const [Paymentdata, setPaymentData] = useState()
-  console.log(user)
+
   const [Name, setName] = useState('')
   const [city, setcity] = useState('')
   const [email, setemail] = useState('')
@@ -24,15 +25,21 @@ function Booking() {
   const [HotelData, setHotelData] = useState()
   const [BookingData, setBookingData] = useState()
 
+  const check_in=new Date(checkIn)
+  const check_out=new Date(checkOut)
+  const newcheckin=check_in.toDateString()
+  const newcheckout=check_out.toDateString()
 
   useEffect(() => {
     if (checkIn && checkOut) {
-      const Night = Math.abs(checkOut.getTime() - checkIn.getTime()) / (1000 * 60 * 60 * 24)
+      const Night = Math.abs(check_out?.getTime() - check_in?.getTime()) / (1000 * 60 * 60 * 24)
       setNumberofNights(Math.ceil(Night).toString())
     }
     console.log(NumberofNights)
 
   }, [checkIn, checkOut])
+
+console.log(checkIn,checkOut)
 
 
   useEffect(() => {
@@ -43,10 +50,10 @@ function Booking() {
           data: {
             NumberofNights: NumberofNights.toString()
           },
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          withCredentials:true
+          headers:{
+            Authorization:userinfo.authorized_token
+          }
+          // withCredentials:true
         })
         const data = await request.data
         console.log(NumberofNights)
@@ -61,17 +68,20 @@ function Booking() {
     func()
   }, [hotelid, NumberofNights])
 
+    // const currentProfile= axios.get(`${import.meta.env.VITE_BACKEND_URL}/user/me`,{
+    //   withCredentials:true
+    // })
+//     const currentProfile= axios.get(`${import.meta.env.VITE_BACKEND_URL}/user/me`)
+// console.log(currentProfile)
   useEffect(() => {
-    setName(user.name)
-    setcity(user.city)
-    setemail(user.email)
+    setName(userinfo.name)
+    setcity(userinfo?.city)
+    setemail(userinfo.email)
   }, [])
   useEffect(() => {
 
     const request = async () => {
-      const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/hotel/find/${hotelid}`, {
-        withCredentials: true
-      })
+      const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/hotel/find/${hotelid}`)
       const data = await response.data
 
       setHotelData(data)
@@ -81,8 +91,14 @@ function Booking() {
     request()
   }, [hotelid])
 
-  
+  const navigate=useNavigate()
   const [processing, setprocessing] = useState(false)
+
+  function Navigate(){
+    if(processing===true){
+      navigate('/mybooking')
+    }
+  }
   async function submit(e) {
     e.preventDefault()
     
@@ -98,13 +114,14 @@ function Booking() {
     formdata.append('hotelid', hotelid)
     try {
         
-      const Request = await axios(`${import.meta.env.VITE_BACKEND_URL}/hotel/67f91423e5f4d167b7bac536/booking`, {
+      const Request = await axios(`${import.meta.env.VITE_BACKEND_URL}/hotel/${hotelid}/booking`, {
         method:'post',
         data:formdata,
         headers:{
-          'Content-Type':'application/json'
+          'Content-Type':'application/json',
+          Authorization:userinfo.authorized_token
         },
-        withCredentials:true
+        // withCredentials:true
       })
       const response = await Request.data
       console.log(response)
@@ -133,6 +150,8 @@ setprocessing(false)
   }
   console.log(Paymentdata)
   console.log(BookingData)
+
+
   return (
     <>
       <div className="grid md:grid-cols-[1fr_2fr]">
@@ -146,11 +165,11 @@ setprocessing(false)
                   <div className="flex justify-between">
                     <div>
                       Check-in
-                      <div className="font-bold"> {checkIn?.toDateString()}</div>
+                      <div className="font-bold"> {newcheckin}</div>
                     </div>
                     <div>
                       Check-out
-                      <div className="font-bold"> {checkOut?.toDateString()}</div>
+                      <div className="font-bold"> {newcheckout}</div>
                     </div>
                   </div>
                   <div className="border-t border-b py-2">
@@ -167,7 +186,7 @@ setprocessing(false)
         </div>
         {/* <Elements stripe={stripePromise} options={{ clientSecret: Paymentdata?.clientSecret }} > */}
         {
-          user&&Paymentdata&&
+          userinfo&&Paymentdata&&
          ( <form
             onSubmit={submit}
             className="grid grid-cols-1 gap-5 rounded-lg border border-slate-300 p-5"
@@ -224,7 +243,7 @@ setprocessing(false)
               type="submit"
               className="bg-header text-white py-1.5 px-14 rounded cursor-pointer font-bold hover:bg-blue-500 text-md :bg-gray-500"
             >
-              {processing ? <span>Processing...</span> : <span>Confirm Booking</span>}
+              {processing ? <span >Processing...</span>  : <span>Confirm Booking</span>}
             </button>
 
           </form>

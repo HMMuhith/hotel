@@ -16,7 +16,7 @@ router.get('/',Auth, async(req,res)=>{
             return booking?.userId===req.user?.id
         }) 
 
-        const userBookings={
+        const userBookings={ 
             ...hotel.toObject(),
             bookings
         } 

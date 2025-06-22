@@ -3,6 +3,7 @@ import { Link, useParams } from 'react-router-dom'
 import { hotelTypes } from './hoteltypes'
 import { facilities } from './hoteltypes'
 import axios from 'axios'
+import { useSelector } from 'react-redux'
 
 
 function EditHotel() {
@@ -24,12 +25,17 @@ function EditHotel() {
 
 
   // console.log(facility)
-
+const {userinfo}=useSelector(store=>store.auth)
 
   useEffect(() => {
     const request = async () => {
-      const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/hotel/find/${hotelid}`, {
-        withCredentials: true
+      // const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/hotel/find/${hotelid}`, {
+      //   withCredentials: true
+      // })
+      const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/hotel/find/${hotelid}`,{
+        headers:{
+          Authorization:userinfo.authorized_token
+        }
       })
       const data = await response.data
 
@@ -81,8 +87,13 @@ function EditHotel() {
         formdata.append('facilities', item)
       })
 
-      const req = await axios.put(`${import.meta.env.VITE_BACKEND_URL}/booking/${hotelid}`, formdata, {
-        withCredentials: true
+      // const req = await axios.put(`${import.meta.env.VITE_BACKEND_URL}/booking/${hotelid}`, formdata, {
+      //   withCredentials: true
+      // })
+      const req = await axios.put(`${import.meta.env.VITE_BACKEND_URL}/booking/${hotelid}`, formdata,{
+        headers:{
+          Authorization:userinfo.authorized_token
+        }
       })
       console.log(req)
     } catch (error) {
@@ -96,11 +107,11 @@ function EditHotel() {
         <div className='flex flex-col border border-zinc-300 w-5xl rounded m-auto gap-4'>
           <label className='text-gray-700 p-3 text-sm font-bold flex-1' htmlFor="name" >
             Name
-            <input type="text" className='border border-zinc-300 rounded  ml-17 w-[42.4rem] py-1 pl-4 font-normal' name="name" id="name" value={name} onChange={(e) => setName(e.target.value)} />
+            <input type="text" className='border border-zinc-300 rounded  ml-17 w-[42.4rem] py-1 pl-2 font-normal' name="name" id="name" value={name} onChange={(e) => setName(e.target.value)} />
           </label>
           <label className='text-gray-700 p-3 text-sm font-bold flex-1' htmlFor="country" >
             Country
-            <input type="text" className='border border-zinc-300 rounded w-[42.4rem] ml-13 py-1  font-normal' name="country" id="country" value={country} onChange={e => setCountry(e.target.value)} />
+            <input type="text" className='border border-zinc-300 rounded w-[42.4rem] ml-13 py-1 pl-2 font-normal' name="country" id="country" value={country} onChange={e => setCountry(e.target.value)} />
           </label>
           <label className='text-gray-700 p-3 text-sm font-bold flex-1' htmlFor="city" >
             City
@@ -110,7 +121,7 @@ function EditHotel() {
             <label className='text-gray-700 p-3 block mt-2.5 text-sm font-bold' htmlFor="description" >
               Description
             </label>
-            <textarea className='resize-none border border-zinc-300 rounded ml-[1.1rem] font-normal' cols={90} value={description} onChange={e => setDecription(e.target.value)} name="description" id="description" rows={3}></textarea>
+            <textarea  className='resize-none border border-zinc-300 rounded ml-[1.1rem] font-normal px-2' cols={90} value={description} onChange={e => setDecription(e.target.value)} name="description" id="description" rows={3}></textarea>
 
           </div>
           <label htmlFor="price" className=' p-3 text-sm font-semibold '>
@@ -133,13 +144,13 @@ function EditHotel() {
         </div>
                     <div>
                       <h2 className='text-3xl font-IBM font-bold mb-3 ml-2.5 text-sky-700 underline p-3 underline-offset-8 decoration-zinc-800'>Type</h2>
-                      <div className='grid grid-cols-3 place-items-center gap-2 p-3 border border-zinc-300 rounded-lg m-auto w-4xl'>
+                      <div className='grid grid-cols-3 place-items-center gap-2 p-3  border border-zinc-300 rounded-lg m-auto w-4xl'>
 
                         {hotelTypes.map((item, index) => (
                           <>
-                            <div className='border border-zinc-400 cursor-pointer h-14  flex w-[10rem] justify-center items-center hover:bg-blue-300 active:bg-blue-600 rounded-full font-semibold'>
-                              <label htmlFor={index} className='flex justify-center cursor-pointer items-center  rounded-2xl'>
-                                <input type="radio" id={index} key={index} name="type" onChange={e => { console.log(e); return setType(prev => { return e.target.checked ? [e.target.value] : prev.filter(type => type !== e.target.value) }) }} value={item} className='hidden ' />
+                            <div className='border border-zinc-400 cursor-pointer  h-14  flex w-[10rem] justify-center items-center hover:bg-blue-300 active:bg-blue-600 rounded-full font-semibold'>
+                              <label htmlFor={index} className='flex justify-center cursor-pointer items-center h-14 rounded-2xl'>
+                                <input type="radio"  id={index} key={index} name="type" onChange={e => { console.log(e); return setType(prev => { return e.target.checked ? [e.target.value] : prev.filter(type => type !== e.target.value) }) }} value={item} className='hidden' />
                                 <span id={index} className='flex justify-center items-center' >{item}</span>
                               </label>
 

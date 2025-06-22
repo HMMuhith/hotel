@@ -10,10 +10,11 @@ import Title from './title'
 function Details() {
   const {hotelid}=useParams()
   const [Details,setdetails]=useState()
-const {user}=useSelector((store)=>store.auth)
+const {userinfo}=useSelector((store)=>store.auth)
+
   const {checkIn,checkOut,adultCount,childCount}=useSelector(state=>state.search)
-  const [CheckIn,setCheckIn]=useState()
-  const [CheckOut,setCheckOut]=useState()
+  const [CheckIn,setCheckIn]=useState(checkIn)
+  const [CheckOut,setCheckOut]=useState(checkOut)
   const [AdultCount,setadultcount]=useState(adultCount)
   const [Childcount,setchildcount]=useState(childCount)
   const minDate = new Date();
@@ -24,9 +25,10 @@ console.log(location)
 const navigate=useNavigate()
   useEffect(()=>{
     const request=async()=>{
-const Data= await axios.get(`${import.meta.env.VITE_BACKEND_URL}/hotel/find/${hotelid}`,{
-  withCredentials:true
-})
+// const Data= await axios.get(`${import.meta.env.VITE_BACKEND_URL}/hotel/find/${hotelid}`,{
+//   withCredentials:true
+// })
+const Data= await axios.get(`${import.meta.env.VITE_BACKEND_URL}/hotel/find/${hotelid}`)
 const response=await Data.data
 console.log(Data)
 setdetails(response)
@@ -35,8 +37,9 @@ setdetails(response)
   },[])
 
 const dispatch=useDispatch()
-  function submit(){
-dispatch(CHECKIN(checkIn))
+  function submit(e){
+    e.preventDefault()
+dispatch(CHECKIN(CheckIn))
 dispatch(CHECKOUT(CheckOut))
 dispatch(CHILDCOUNT(Childcount))
 dispatch(ADULTCOUNT(AdultCount))
@@ -82,7 +85,7 @@ navigate(`/booking/${hotelid}`)
               <div className="flex flex-col p-4 bg-blue-200 gap-4">
                     <h3 className="text-md font-bold">£{Details?.pricePerNight}</h3>
                     <form
-                      onSubmit={ user? submit : navigate('/login')}
+                      
                     >
                       <div className="grid grid-cols-1 gap-4 items-center">
                         <div>
@@ -110,7 +113,7 @@ navigate(`/booking/${hotelid}`)
                             endDate={CheckOut}
                             minDate={minDate}
                             maxDate={maxDate}
-                            placeholderText="Check-in Date"
+                            placeholderText="Check-out Date"
                             className="min-w-full bg-white p-2 focus:outline-none"
                             wrapperClassName="min-w-full"
                           />
@@ -141,8 +144,8 @@ navigate(`/booking/${hotelid}`)
                           
                         </div>
                         
-                          <button className="bg-blue-600 text-white h-full p-2 font-bold hover:bg-blue-500 text-xl">
-                           {user? <div >Book Now</div> : <div>Please Login to book</div>}
+                          <button className="bg-blue-600 cursor-pointer text-white h-full p-2 font-bold hover:bg-blue-500 text-xl">
+                           {userinfo? <div onClick={submit} >Book Now</div> : <div onClick={()=>navigate('/login')}>Please Login to book</div>}
                           </button>
                        
                       </div>

@@ -3,9 +3,7 @@ import bcrypt from "bcryptjs";
 
 const Schema=mongoose.Schema
 const Profile=new Schema({
-    id:{
-type:Schema.Types.ObjectId
-    },
+   
     name:{
         type:String,
         required:true,

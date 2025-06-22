@@ -38,11 +38,7 @@ const handleUnit = (e) => {
  
 }
 
-// useEffect(()=>{
-//   if(userinfo){
-//     navigate(redirect)
-//   }
-// },[navigate,userinfo])
+
 
 
 function testify(){
@@ -82,9 +78,10 @@ const submit = async (e) => {
     password: user.password
   }
   try {
-  const response = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/user/login`,newUser,{
-    withCredentials:true
-  })
+  // const response = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/user/login`,newUser,{
+  //   withCredentials:true
+  // })
+  const response = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/user/login`,newUser)
 
 const data=response.data
 dispatch(LoginUser(data))

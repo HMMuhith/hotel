@@ -2,6 +2,7 @@ import React, {  useRef, useState } from 'react'
 import { facilities } from './hoteltypes'
 import { hotelTypes } from './hoteltypes'
 import axios from 'axios'
+import { useSelector } from 'react-redux'
 
 function Hotelform() {
     const [name, setName] = useState('')
@@ -17,11 +18,9 @@ function Hotelform() {
     const [facility, setfacility] = useState([])
 
     const [error, setError] = useState('')
+    const {userinfo}=useSelector(store=>store.auth)
     const formdata = new FormData()
     const checkref = useRef()
-
-
-    
 
 
     formdata.append('name', name)
@@ -41,7 +40,7 @@ function Hotelform() {
 
     formdata.append('type',type[0])
 
-    formdata.get('type')
+    console.log(formdata.get('type'))
     facility.forEach(item => {
        
         formdata.append('facilities', item)
@@ -50,7 +49,12 @@ function Hotelform() {
     async function submit(e) {
         e.preventDefault()
 
-        const request = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/hotel`, formdata, { withCredentials: true })
+        // const request = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/hotel`, formdata, { withCredentials: true })
+        const request = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/hotel`, formdata,{
+           headers:{
+            Authorization:userinfo.authorized_token
+           }
+        })
         const data = await request.data
         console.log(data)
 
@@ -68,21 +72,21 @@ function Hotelform() {
                 <div className='flex flex-col border border-zinc-300 w-5xl rounded m-auto gap-4'>
                     <label className='text-gray-700 p-3 text-sm font-bold flex-1' htmlFor="name" >
                         Name
-                        <input type="text" className='border border-zinc-300 rounded  ml-17 w-[42.4rem] py-1 pl-4 font-normal' name="name" id="name" value={name} onChange={(e) => setName(e.target.value)} />
+                        <input type="text" className='border border-zinc-300 rounded  ml-17 w-[42.4rem] py-1 pl-2 font-normal' name="name" id="name" value={name} onChange={(e) => setName(e.target.value)} />
                     </label>
                     <label htmlFor="country"  className='text-gray-700 p-3 text-sm font-bold flex-1'>
                         Country
-                        <input type="text" name="country" id="country" className='border border-zinc-300 rounded w-[42.4rem] ml-13 py-1  font-normal' value={country} onChange={e => setCountry(e.target.value)} />
+                        <input type="text" name="country" id="country" className='border border-zinc-300 rounded w-[42.4rem] ml-13 py-1 pl-2 font-normal' value={country} onChange={e => setCountry(e.target.value)} />
                     </label>
                     <label htmlFor="city"  className='text-gray-700 p-3 text-sm font-bold flex-1'>
                         City
-                        <input className='border border-zinc-300 rounded  py-1 px-2 font-normal w-[42.4rem] ml-20' type="text" onChange={e => setCity(e.target.value)} value={city} name="city" id="city" />
+                        <input className='border border-zinc-300 rounded  py-1 pl-2 font-normal w-[42.4rem] ml-20' type="text" onChange={e => setCity(e.target.value)} value={city} name="city" id="city" />
                     </label>
                     <div className='flex w-[60rem] justify-start'>
                     <label htmlFor="description" className='text-gray-700 p-3 block mt-2.5 text-sm font-bold '>
                         Description
                          </label>
-                        <textarea  className=' resize-none border border-zinc-300 rounded ml-[1.1rem] font-normal ' value={description} cols={90} onChange={e => setDecription(e.target.value)} name="description" id="description" rows={3}></textarea>
+                        <textarea  className=' resize-none border border-zinc-300 pl-2 rounded ml-[1.1rem] font-normal ' value={description} cols={90} onChange={e => setDecription(e.target.value)} name="description" id="description" rows={3}></textarea>
                         </div>
                  
                     <label htmlFor="price" className='p-3 text-sm font-semibold'>

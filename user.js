@@ -3,10 +3,11 @@ import User from './ProfileModel.js'
 import validator from 'validator'
 import bcrypt from 'bcryptjs'
 import { Admin, Auth } from './auth.js'
+import jwt from 'jsonwebtoken'
 
 const router = express.Router()
 
-const error = {}
+const error = {} 
 
 router.post('/signup', async (req, res) => {
     try {
@@ -80,7 +81,7 @@ router.post('/signup', async (req, res) => {
 
 
 // **************************************************Login*********************************************
-
+ 
 
 router.post('/login', async (req, res) => {
 
@@ -89,17 +90,35 @@ router.post('/login', async (req, res) => {
     if (!user) {
         return res.status(404).json({ error: `user not found` })
     }
-    if (user && await user.match(password)) {
-        req.session.isLoggedin = true
-        req.session.user = user
-        req.session.user.id = user._id
-        req.session.user.name = user.name
-        req.session.user.email=user.email
-        req.session.save()
+    // if (user && await user.match(password)) {
+    //     req.session.isLoggedin = true
+    //     req.session.user = user 
+    //     req.session.user.id = user._id
+    //     req.session.user.name = user.name
+    //     req.session.user.email=user.email
+    //    return req.session.save((err)=>{
+    //         if(err){ 
+    //             return res.status(404).json({err : err +'session saving problem'})
+    //         }
+    //          res.send({success:`session saved .Loggedin successfully`,id: req.session.user.id, name: req.session.user.name,email:req.session.user.email})
+    //     }
+    //     )
 
-        return res.status(200).json({ success: `Loggedin successfully`, id: req.session.user.id, name: req.session.user.name,email:req.session.user.email })
+    // }
+if(user && await user.match(password)){
+    const payload={
+        id:user._id,
+        name:user.name,
+        email:user.email,
+        password:user.password
     }
-
+   return jwt.sign(payload,process.env.JWT_SECRET_KEY,{expiresIn:60*60*24*1000},(err,token)=>{
+        if(err){
+           return res.status(400).json(err)
+        }
+        return res.status(200).json({success:`Logged in successfully`, id:user._id, name:user.name, email:user.email, isAdmin:user.isAdmin, authorized_token:`Bearer ${token}`})
+    })
+}
     return res.status(404).json({ error: `unauthorized user` })
 
 }
@@ -107,21 +126,35 @@ router.post('/login', async (req, res) => {
 router.post('/logout', (req, res,next) => {
     try
     {
-        req.session.destroy(err=>{ 
-            if(err){
-              return  console.log(err)
-            }
-            res.clearCookie('connect.sid')
-            res.status(200).json({ success: `cookies deleted` })
+        // req.session.destroy(err=>{ 
+        //     if(err){
+        //       return  console.log(err)
+        //     }
+        //     res.clearCookie('connect.sid')
+        //     res.status(200).json({ success: `cookies deleted` })
             
-        })
-        
+        // })
+     return res.status(200).json({success:`Logged out successfully`})   
       
      
     } 
   catch (error)  {
-res.status(400).json(error)
+res.status(400).json(error) 
     }
+})
+
+router.get('/me',Auth,async(req,res)=>{
+
+    const userID=req.user.id
+try {
+    const user=await User.findById(userID)
+    if(!user){
+        return res.status(404).json({error:`unauthorized`})
+    }
+    res.status(200).json(user)
+} catch (error) {
+    res.status(404).json({error:`Authentication problem`})
+}
 })
 
 router.put('/update/:id', Auth, async (req, res) => {

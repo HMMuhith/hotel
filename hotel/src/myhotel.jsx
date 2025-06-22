@@ -3,15 +3,18 @@ import axios from 'axios'
 import { Link } from 'react-router-dom'
 import { BsBuilding, BsMap } from "react-icons/bs";
 import { BiHotel, BiMoney, BiStar } from "react-icons/bi";
+import { useSelector } from 'react-redux';
 
 function MyHotel() {
     const [Data, setdata] = useState([])
+    const {userinfo}=useSelector(store=>store.auth)
 
     useEffect(() => {
         const request = async () => {
-            const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/hotel`,{
-                withCredentials:true
-            })
+            // const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/hotel`,{
+            //     withCredentials:true
+            // })
+            const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/hotel`)
             const data = await response.data
             console.log(data)
             setdata(data)

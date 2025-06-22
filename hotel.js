@@ -28,7 +28,7 @@ const storage = new CloudinaryStorage({
 const upload = multer({ storage })
 const router = express.Router()
 
-router.post('/',  upload.array('photos'), async (req, res) => {
+router.post('/', Auth, upload.array('photos'), async (req, res) => {
 
     try {
         const hotel = new Hotel(
@@ -58,21 +58,21 @@ router.post('/',  upload.array('photos'), async (req, res) => {
 
 const stripe=new Stripe(process.env.STRIPE_API_KEY)
 
-router.post('/:hotelid/payment', async(req,res)=>{
+router.post('/:hotelid/payment',Auth, async(req,res)=>{
 
     try{ 
     const NumberofNights=req.body.NumberofNights
-    // const userId=req.user.id
+    const userId=req.user.id
     const hotelid=req.params.hotelid
     const hotel =await Hotel.findById(hotelid)
     const totalCost=hotel.pricePerNight*NumberofNights
 
     const payment= await stripe.paymentIntents.create({
         currency:'USD',
-amount:totalCost*100,
+amount:totalCost*100, 
 metadata:{
     hotelid, 
-    // userId 
+    userId 
 }
     }) 
 if(!payment.client_secret){
@@ -95,7 +95,7 @@ catch(error){
 }
 )
 
-router.post('/:hotelid/booking', async(req,res)=>{
+router.post('/:hotelid/booking',Auth, async(req,res)=>{
     try {
        const paymentID=req.body.paymentID
 const payment=await stripe.paymentIntents.retrieve(paymentID)
@@ -108,22 +108,26 @@ return res.status(400).json({message:`payment intent mismatch`})
 }
 
 // if(payment.status!=='succeeded'){
-//     return res.status(400).json({message:`Payment not succeeded`, status:`${payment.status}`})
+//     return res.status(400).json({message:`Payment not succeeded`, status:`${payment.status}`})   
 // }
 
-// const booking={
-//     name:req.body.name,
-// email: req.body.email,
-// adultCount:req.body.adultCount,
-// childcount :req.body.childCount,
-// checkIn:req.body.checkIn,
-// checkOut:req.body.checkOut,
-// totalCost: req.body.totalCost,
-// paymentID:payment.id
+console.log(payment.status)
 
-// }
-// const booking={...req.body,userId:req.user.id}
-const booking={...req.body}
+
+const booking={
+    userId:req.user.id,
+    name:req.body.name,
+email: req.body.email,
+adultCount:req.body.adultCount,
+childcount :req.body.childCount,
+checkIn:req.body.checkIn,
+checkOut:req.body.checkOut,
+totalCost: req.body.totalCost,
+paymentID:payment.id
+
+}
+
+
 
 const updateBooking= await Hotel.findByIdAndUpdate(req.params.hotelid,{
     $push:{bookings:booking}
@@ -144,12 +148,12 @@ router.get('/',  async (req, res) => {
     try {
         const getHotel = await Hotel.find({}).sort('-lastUpdated')
         res.status(200).json(getHotel)
-    }
-    catch (err) {
+    } 
+    catch (err) { 
         res.status(400).json({ Error: `${err}` })
     }
 })
-
+  
 router.get('/find/:hotelid',async (req, res) => {
     try {
         const getHotel = await Hotel.findById(req.params.hotelid)
@@ -202,7 +206,7 @@ switch(req.query.sort){
 }
 // const query={$or:[{city:'Rangpur', country:'Bangladesh'}]}
 const query={...destination,...childCount,...pricePerNight,...adultCount,...facilities,...type,...starRating}
-
+  
 
 const hotels= await Hotel.find(query).sort(sorting).skip(skippages).limit(hotels_perpage)
 const totalHotels=await Hotel.countDocuments(query)
@@ -215,12 +219,12 @@ catch(error){
 })
 
 
-router.put('/:hotelid',  upload.array('photos'), async (req, res) => {
+router.put('/:hotelid', Auth, upload.array('photos'), async (req, res) => {
     try {
         const updatedItems = await Hotel.findByIdAndUpdate(req.params.hotelid, {
             $set: {
-                // userId:req.user.id,
-                name: req.body.name,
+                userId:req.user.id,
+                name: req.body.name, 
                 type: req.body.type,
                 country:req.body.country,
                 city: req.body.city,

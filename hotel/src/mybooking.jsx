@@ -1,24 +1,35 @@
 import React, { useEffect, useState } from 'react'
 import axios from 'axios'
 import {useSelector} from 'react-redux'
+import { Link } from 'react-router-dom'
 
 export const MyBooking = () => {
     const [Hotel,setHotel]=useState()
-    const {user}=useSelector(store=>store.auth)
+    const {userinfo}=useSelector(store=>store.auth)
+    if(userinfo){
     useEffect(()=>{
         const Request =async()=>{
+            // const req=await axios.get(`${import.meta.env.VITE_BACKEND_URL}/booking`,{
+            //    withCredentials:true
+            // })
             const req=await axios.get(`${import.meta.env.VITE_BACKEND_URL}/booking`,{
-               withCredentials:true
+              headers:{
+                Authorization:userinfo?.authorized_token 
+              }
             })
             const data=await req.data
             console.log(data)
             setHotel(data)
         }
         Request()
-    },[user.id])
-
+        console.log(userinfo)
+    },[userinfo.authorized_token])
+  }
+if(!userinfo){
+  return <div className='w-[36rem] font-IBM font-bold text-pink-900 py-12 m-auto border border-slate-300 rounded-md bg-zinc-100 flex justify-center items-center mt-10 mb-9'>Please <Link to={'/login'} className='px-2 text-blue-400'>Log in</Link> to book your hotel</div>
+}
     if(!Hotel || Hotel?.length===0){
-        return <span>No Hotel found</span>
+        return <div className='w-[36rem] font-IBM font-bold text-pink-900 py-12 m-auto border border-slate-300 rounded-md bg-zinc-100 flex justify-center items-center mt-10 mb-9'>No Hotel found. </div>
     }
   return (
     <div className="space-y-5">
@@ -54,7 +65,7 @@ export const MyBooking = () => {
                   </span>
                 </div>
               </div>
-            ))}
+            )) }
           </div>
         </div>
       ))}

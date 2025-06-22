@@ -8,13 +8,14 @@ import SearchBar from './searchbar'
 function Header() {
  
     const dispatch=useDispatch()
-    const {user}=useSelector(store=>store.auth)
+    const {userinfo}=useSelector(store=>store.auth)
     
    async function logoutHandler(){
-const data=await axios.post(`${import.meta.env.VITE_BACKEND_URL}/user/logout`,{
-    withCredentials:true
-   }
-)
+// const data=await axios.post(`${import.meta.env.VITE_BACKEND_URL}/user/logout`,{
+//     withCredentials:true
+//    }
+// )
+const data=await axios.post(`${import.meta.env.VITE_BACKEND_URL}/user/logout`)
 console.log(data)
         dispatch(LogOut())
    }
@@ -34,7 +35,7 @@ console.log(data)
                                 <NavLink to={'/mybooking'} className='bg-white mt-4 font-IBM text-black flex font-bold text-sm rounded justify-center items-center w-24 h-8 '>Mybooking</NavLink>
                                 </span>
                                 <span className='flex justify-center text-sm items-center mr-2 font-bold '>
-                                    <button className='bg-white text-black mt-4 font-IBM flex justify-center items-center w-20 h-8 rounded'>{user?<Link to={`/`} onClick={logoutHandler} >Log out</Link>:<Link to={`/login`} >Log in</Link>}</button> <br /><br />
+                                    <button className='bg-white text-black mt-4 font-IBM flex justify-center items-center w-20 h-8 rounded'>{userinfo?<Link to={`/`} onClick={logoutHandler} >Log out</Link>:<Link to={`/login`} >Log in</Link>}</button> <br /><br />
                                 </span>
                 </div>
             </div>

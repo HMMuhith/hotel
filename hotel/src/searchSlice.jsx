@@ -7,9 +7,9 @@ const initialState = {
     checkIn: sessionStorage.getItem('checkIn') ? new Date(sessionStorage.getItem('checkIn') || new Date().toISOString) : '',
     checkOut: sessionStorage.getItem('checkOut') ? new Date(sessionStorage.getItem('checkOut') || new Date().toISOString): '',
 
-    adultCount: sessionStorage.getItem('adultCount') ? parseInt(sessionStorage.getItem('adultCount')) : null,
+    adultCount: sessionStorage.getItem('adultCount') ? parseInt(sessionStorage.getItem('adultCount')) : 1,
 
-    childCount: sessionStorage.getItem('childCount') ? parseInt(sessionStorage.getItem('childCount')) : null,
+    childCount: sessionStorage.getItem('childCount') ? parseInt(sessionStorage.getItem('childCount')) : 1,
 
     hotelId: sessionStorage.getItem('hotelId') ? JSON.parse(sessionStorage.getItem('hotelId')) : null,
     stripe:sessionStorage.getItem('stripe_publish') ?JSON.parse(sessionStorage.getItem('stripe_publish')) : null
@@ -24,19 +24,19 @@ const searchSlice = createSlice({
             sessionStorage.setItem('destination', JSON.stringify(action.payload))
         },
         CHECKIN(state, action) {
-            state.checkIn = action.payload || new Date().toISOString()
-            sessionStorage.setItem('checkIn', action.payload || new Date().toISOString())
+            state.checkIn = action.payload?.toISOString() || new Date().toISOString()
+            sessionStorage.setItem('checkIn', action.payload.toISOString() || new Date().toISOString())
         },
         CHECKOUT(state, action) {
-            state.checkOut = action.payload || new Date().toISOString()
-            sessionStorage.setItem('checkOut', action.payload || new Date().toISOString() )
+            state.checkOut = action.payload?.toISOString() || new Date().toISOString()
+            sessionStorage.setItem('checkOut', action.payload.toISOString() || new Date().toISOString() )
         },
         ADULTCOUNT(state,action){
             state.adultCount=action.payload || 1
             sessionStorage.setItem('adultCount',action.payload?.toString() || 1)
         },
         CHILDCOUNT(state,action){
-            state.childCount=action.payload
+            state.childCount=action.payload || 0
             sessionStorage.setItem('childCount', action.payload?.toString())
         },
         HOTELID(state,action){

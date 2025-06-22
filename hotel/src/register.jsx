@@ -104,11 +104,12 @@ setError({...error,passwordempty:''})
         confirm_password: user.confirm_password
       }
       try {
-        const response = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/user/signup`,newUser,{
+        // const response = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/user/signup`,newUser,{
           
-            withCredentials:true
+        //     withCredentials:true
           
-        })
+        // })
+        const response = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/user/signup`,newUser)
         const data= await response.data
         console.log(data)
         setstatus({type:'success'})
