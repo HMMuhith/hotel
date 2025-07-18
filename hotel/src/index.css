@@ -5,6 +5,7 @@
 @theme {
     --font-mont:"Montserrat";
     --font-IBM:"IBM Plex Sans", sans-serif;
-    --color-header:#1d2429
+    --color-header:#1d2429;
+    --color-position:#45556c;
 }
 
