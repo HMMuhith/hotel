@@ -50,7 +50,7 @@ console.log(data)
              <div className='ml-[702px] '>
                 <div onClick={passhandler} className='w-[45px] h-[45px] bg-position rounded-full relative z-50 cursor-pointer overflow-hidden flex justify-center items-center text-center text-[10px]'>Email & Pass </div>
      {position?
-    (<div className='flex mr-3 font-IBM bg-white text-black rounded-lg  flex-col top-[105px] absolute right-[29px] opacity-100 transform duration-400 ease-linear -translate-x-7'>
+    (<div className='flex mr-3 font-IBM bg-white text-black rounded-lg  flex-col top-[105px] absolute right-[29px] opacity-100 transform duration-400 ease-linear -translate-x-5'>
                     <span className='px-7 py-1.5 '>Email: riyad@gmail.com  Pass: riyad123 </span>
                 </div>):
                 (<div className='flex mr-3 font-IBM bg-white text-black rounded-lg  flex-col top-[105px] absolute right-[29px] opacity-0 duration-200 ease-linear translate-x-2'>
