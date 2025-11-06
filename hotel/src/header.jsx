@@ -47,13 +47,13 @@ console.log(data)
                 <h1 className='text-3xl flex pl-14 text-white font-bold pb-2'>Your Dream Stay is Just a Click Away<span className='mt-1.5 pl-1'>!</span></h1>
                 <p className='text-white tracking-tight font-semibold pl-14'>Exclusive Packages for Families & Couples!</p>
                </div> 
-             <div className='ml-[696px] '>
+             <div className='ml-[702px] '>
                 <div onClick={passhandler} className='w-[45px] h-[45px] bg-position rounded-full relative z-50 cursor-pointer overflow-hidden flex justify-center items-center text-center text-[10px]'>Email & Pass </div>
      {position?
-    (<div className='flex mr-3 font-IBM bg-white text-black rounded-lg  flex-col top-[105px] absolute right-[30px] opacity-100 transform duration-400 ease-linear translate-x-0'>
+    (<div className='flex mr-3 font-IBM bg-white text-black rounded-lg  flex-col top-[105px] absolute right-[29px] opacity-100 transform duration-400 ease-linear -translate-x-7'>
                     <span className='px-7 py-1.5 '>Email: riyad@gmail.com  Pass: riyad123 </span>
                 </div>):
-                (<div className='flex mr-3 font-IBM bg-white text-black rounded-lg  flex-col top-[105px] absolute right-[30px] opacity-0 duration-200 ease-linear translate-x-6'>
+                (<div className='flex mr-3 font-IBM bg-white text-black rounded-lg  flex-col top-[105px] absolute right-[29px] opacity-0 duration-200 ease-linear translate-x-2'>
                     <span className='px-7 py-1.5 '>Email: riyad@gmail.com  Pass: riyad123 </span>
                 </div>)}
                </div>
