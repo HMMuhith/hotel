@@ -144,9 +144,11 @@ navigate(`/booking/${hotelid}`)
                           
                         </div>
                         
-                          <button className="bg-blue-600 cursor-pointer text-white h-full p-2 font-bold hover:bg-blue-500 text-xl">
-                           {userinfo? <div onClick={submit} >Book Now</div> : <div onClick={()=>navigate('/login')}>Please Login to book</div>}
-                          </button>
+                       {userinfo ?<button onClick={submit} className="bg-blue-600 cursor-pointer text-white h-full p-2 font-bold hover:bg-blue-500 text-xl">
+                           Book Now
+                          </button> : <button onClick={(e)=>{e.preventDefault();navigate('/login')}} className="bg-blue-600 cursor-pointer text-white h-full p-2 font-bold hover:bg-blue-500 text-xl">
+                           Please log in to book
+                          </button>}
                        
                       </div>
                     </form>
