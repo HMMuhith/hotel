@@ -2,19 +2,32 @@ import React, { useEffect, useState } from 'react'
 import axios from 'axios'
 import { Link } from 'react-router-dom'
 import Title from './title'
+import LoadingSpinner from './spinner'
+
 
 function Home() {
 const [Hotel,setHotel]=useState([])
+  const [Display, setDisplay] = useState(true)
 
+  
 useEffect(()=>{
   const Request=async()=>{
     // const httpRequest=await axios.get(`${import.meta.env.VITE_BACKEND_URL}/hotel`,{
     //   withCredentials:true
     // })
+    try{
     const httpRequest=await axios.get(`${import.meta.env.VITE_BACKEND_URL}/hotel`)
     const response=await httpRequest.data
     console.log(response)
     setHotel(response)
+    }
+    catch(error){
+    console.log(error)
+  }
+  finally{
+    setDisplay(false)
+
+  }
   }
   Request()
 },[])
@@ -31,7 +44,10 @@ console.log(bottomframeHotel)
       <h2 className="text-3xl font-bold ml-2">Latest Destinations</h2>
       <p className='ml-2 '>Most recent desinations added by our hosts</p>
       <div className="grid gap-4">
-      <div className="grid md:grid-cols-2 grid-cols-1 gap-4">
+        { Display ? <LoadingSpinner/> :
+      (
+        <>
+        <div className="grid md:grid-cols-2 grid-cols-1 gap-4">
    {topframeHotel?.map((hotel)=>(
 <Link
       to={`/details/${hotel._id}`}
@@ -78,6 +94,9 @@ console.log(bottomframeHotel)
   
    }
    </div>
+        </>
+          )
+          }
     </div>
     </div>
     </>
